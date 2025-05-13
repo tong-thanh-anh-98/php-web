@@ -80,7 +80,6 @@ ul {
 
         &:hover {
             border-color: rgba($primary-black, 0.20);
-            ;
             color: $primary-black;
         }
     }
@@ -120,7 +119,9 @@ header {
                 font-weight: 500;
                 color: $primary-black;
                 &:hover {
-                    color: $primary-color;
+                    // color: $primary-color;
+                    color: $primary-white;
+                    
                 }
             }
         }
@@ -129,9 +130,11 @@ header {
 
 footer {
     background-color: $tertiary-color;
+
     h2 {
         font-size: 1.5em;
     }
+
     ul {
         li {
             a {
@@ -140,6 +143,7 @@ footer {
             }
         }
     }
+
     .spotlight {
         border-top: 1px solid rgba($primary-white, 0.10);
         border-bottom: 1px solid rgba($primary-white, 0.10);
@@ -167,10 +171,12 @@ footer {
     .card-img {
         overflow: hidden;
         border-radius: 10px;
+
         img {
             border-radius: 10px;
             transition: all 0.3s ease-out;
         }
+
         &:hover {
             img {
                 scale: 1.2;
@@ -180,15 +186,20 @@ footer {
 
     .card-body {
         padding: 0;
+
         a {
             font-size: 1.2em;
+
             &:hover {
                 color: $primary-color;
             }
         }
+
         .price {
+            font-weight: bold;
             font-size: 1.2em;
             padding-bottom: 20px;
+
             span {
                 color: rgba($primary-black, 0.5);
             }

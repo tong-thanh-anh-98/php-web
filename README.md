@@ -13,3 +13,4 @@
   + npm install react-bootstrap bootstrap
   + npm install -D sass-embedded
   + npm i swiper
+  + npm i react-simple-star-rating

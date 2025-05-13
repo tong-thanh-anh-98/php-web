@@ -1,4 +1,5 @@
 import ProductImg from '../../assets/images/mens/eight.jpg';
+import { Link } from 'react-router-dom';
 
 const LatesProducts = () => {
     return (
@@ -9,10 +10,12 @@ const LatesProducts = () => {
                     <div className='col-md-3 col-6'>
                         <div className='product card border-0'>
                             <div className='card-img'>
-                                <img src={ProductImg} alt='' className='w-100' />
+                                <Link to="/product">
+                                    <img src={ProductImg} alt='' className='w-100' />
+                                </Link>
                             </div>
                             <div className='card-body pt-3'>
-                                <a href=''>Sản phẩm mới về.</a>
+                                <Link to='/product'>Sản phẩm mới về.</Link>
                                 <div className='price'>
                                     99.000đ <span className='text-decoration-line-through'>199.000đ</span>
                                 </div>
