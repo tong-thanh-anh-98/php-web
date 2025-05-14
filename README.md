@@ -2,6 +2,8 @@
  + Setup backend:
  + Required installation packages.
 - Installing Intervention Image: composer require intervention/image
+ + Laravel Sanctum:
+- php artisan install:api
 
  + Setup frontend:
  + Installing vite: npm create vite@latest -> enter frontend project name -> select React -> select Javascript.
@@ -14,3 +16,4 @@
   + npm install -D sass-embedded
   + npm i swiper
   + npm i react-simple-star-rating
+  + npm install react-hook-form
