@@ -119,9 +119,7 @@ header {
                 font-weight: 500;
                 color: $primary-black;
                 &:hover {
-                    // color: $primary-color;
-                    color: $primary-white;
-                    
+                    color: $primary-color;
                 }
             }
         }
@@ -225,6 +223,29 @@ footer {
 
 .login {
     width: 450px;
+}
+
+.sidebar {
+    ul {
+        li {
+            border-bottom: 1px solid rgba(6, 17, 35, 0.2);
+            margin-bottom: 2px;
+            a {
+                display: block;
+                padding: 10px;
+                color: $primary-black;
+                &:hover {
+                    color: ($primary-color);
+                }
+            }
+        }
+    }
+}
+
+strong {
+    &:hover {
+        color: red;
+    }
 }
 
 @media (min-width: 200px) and (max-width: 768px) {
