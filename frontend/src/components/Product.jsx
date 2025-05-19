@@ -152,7 +152,7 @@ const Product = () => {
                         </div>
 
                         <div className='add-to-cart mt-4'>
-                            <button className='btn btn-primary text-uppercase'>Add To Cart</button>
+                            <button className='btn btn-primary text-uppercase'><Link to='/cart'>Add To Cart</Link></button>
                         </div>
 
                         <hr />

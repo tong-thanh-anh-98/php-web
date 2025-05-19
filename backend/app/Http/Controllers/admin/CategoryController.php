@@ -13,7 +13,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::orderBy('created_at', 'DESC');
+        $categories = Category::orderBy('created_at', 'DESC')->get();
         return response()->json(
             [
                 'status' => 200,
@@ -73,7 +73,6 @@ class CategoryController extends Controller
             return response()->json([
                 'status' => 404,
                 'message' => 'Dữ liệu không tồn tại.',
-                'data' => []
             ], 404);
         }
 
@@ -101,7 +100,6 @@ class CategoryController extends Controller
         //     return response()->json([
         //         'status' => 404,
         //         'message' => 'Dữ liệu không tồn tại.',
-        //         'data' => []
         //     ], 404);
         // }
 
@@ -125,7 +123,6 @@ class CategoryController extends Controller
             return response()->json([
                 'status' => 404,
                 'message' => 'Dữ liệu không tồn tại.',
-                'data' => []
             ], 404);
         }
 
@@ -152,7 +149,6 @@ class CategoryController extends Controller
             return response()->json([
                 'status' => 404,
                 'message' => 'Data not found.',
-                'data' => []
             ], 404);
         }
 

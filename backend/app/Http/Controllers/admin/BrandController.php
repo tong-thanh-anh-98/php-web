@@ -60,7 +60,6 @@ class BrandController extends Controller
             return response()->json([
                 'status' => 404,
                 'message' => 'Dữ liệu không tồn tại.',
-                'data' => []
             ], 404);
         }
 
@@ -88,7 +87,6 @@ class BrandController extends Controller
             return response()->json([
                 'status' => 404,
                 'message' => 'Dữ liệu không tồn tại.',
-                'data' => []
             ], 404);
         }
 
@@ -115,7 +113,6 @@ class BrandController extends Controller
             return response()->json([
                 'status' => 404,
                 'message' => 'Data not found.',
-                'data' => []
             ], 404);
         }
 

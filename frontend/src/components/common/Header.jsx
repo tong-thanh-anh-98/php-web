@@ -15,9 +15,9 @@ const Header = () => {
                     <Navbar.Toggle aria-controls="navbarScroll" />
                     <Navbar.Collapse id="navbarScroll">
                         <Nav className="ms-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
-                            <Nav.Link as={Link} to="/product">Danh mục 1</Nav.Link>
-                            <Nav.Link as={Link} to="/product">Danh mục 2</Nav.Link>
-                            <Nav.Link as={Link} to="/product">Danh mục 3</Nav.Link>
+                            <Nav.Link as={Link} to="/shop">Danh mục 1</Nav.Link>
+                            <Nav.Link as={Link} to="/shop">Danh mục 2</Nav.Link>
+                            <Nav.Link as={Link} to="/shop">Danh mục 3</Nav.Link>
                         </Nav>
                         <div className='nav-right d-flex'>
                             <a href='#' className='ms-3'>

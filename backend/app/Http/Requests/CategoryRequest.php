@@ -22,8 +22,8 @@ class CategoryRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-             'name' => 'required|string|max:255',
-            'status' => 'nullable|in:0,1' // 1: kích hoạt, 0: ẩn
+            'name' => 'required|string|max:255',
+            'status' => 'required|in:0,1' // 0: ẩn, 1: kích hoạt
         ];
 
         return $rules;
@@ -35,6 +35,7 @@ class CategoryRequest extends FormRequest
     //         'name.required' => 'Tên danh mục là bắt buộc.',
     //         'name.string' => 'Tên danh mục phải là chuỗi.',
     //         'name.max' => 'Tên danh mục không được vượt quá 255 ký tự.',
+    //         'status.required' => 'Bắt buộc chọn 1 trạng thái.',
     //         'status.in' => 'Trạng thái phải là 0 hoặc 1.'
     //     ];
     // }
