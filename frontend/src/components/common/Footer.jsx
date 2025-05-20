@@ -1,4 +1,4 @@
-import LogoFooter from '../../assets/images/ecommerce_logo.png';
+import LogoFooter from '../../assets/images/logo-1.svg';
 
 const Footer = () => {
     return (

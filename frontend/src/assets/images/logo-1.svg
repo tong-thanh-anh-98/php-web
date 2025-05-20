@@ -1,0 +1,16 @@
+<svg width="200" height="70" viewBox="0 0 200 70" xmlns="http://www.w3.org/2000/svg">
+  <!-- Nền bo tròn -->
+  <rect width="200" height="70" rx="15" fill="transparent"></rect>
+
+  <!-- Giỏ hàng icon (hiện đại, dạng flat) -->
+  <g transform="translate(20, 18)" fill="black">
+    <path d="M0 0h4l2.4 9.6a1 1 0 0 0 1 .8h9.6a1 1 0 0 0 1-.8l1.6-6.4H6" stroke="black" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+    <circle cx="8.5" cy="14.5" r="1.5"></circle>
+    <circle cx="15.5" cy="14.5" r="1.5"></circle>
+  </g>
+
+  <!-- Text "eCommerce" -->
+  <text x="50" y="45" font-size="26" font-family="Segoe UI, Arial, sans-serif" fill="black" font-weight="600">
+    eCommerce
+  </text>
+</svg>

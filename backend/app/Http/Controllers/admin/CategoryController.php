@@ -57,7 +57,7 @@ class CategoryController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Đã tạo thành công.',
+            'message' => 'Category created successfully.',
             'data' => $category
         ], 200);
     }
@@ -72,7 +72,7 @@ class CategoryController extends Controller
         if ($category === null) {
             return response()->json([
                 'status' => 404,
-                'message' => 'Dữ liệu không tồn tại.',
+                'message' => 'Category not found.',
             ], 404);
         }
 
@@ -122,7 +122,7 @@ class CategoryController extends Controller
         if (!$category) {
             return response()->json([
                 'status' => 404,
-                'message' => 'Dữ liệu không tồn tại.',
+                'message' => 'Category not found.',
             ], 404);
         }
 
@@ -133,7 +133,7 @@ class CategoryController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Đã cập nhật thành công.',
+            'message' => 'Category updated successfully.',
             'data' => $category
         ], 200);
     }
@@ -148,7 +148,7 @@ class CategoryController extends Controller
         if (!$category) {
             return response()->json([
                 'status' => 404,
-                'message' => 'Data not found.',
+                'message' => 'Category not found.',
             ], 404);
         }
 
@@ -156,7 +156,7 @@ class CategoryController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Đã xóa thành công.',
+            'message' => 'Category deleted successfully.',
         ], 200);
     }
 }

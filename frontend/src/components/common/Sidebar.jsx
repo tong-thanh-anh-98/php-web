@@ -15,7 +15,7 @@ const Sidebar = () => {
                         <Link to='/admin/categories'>Categories</Link>
                     </li>
                     <li>
-                        <a href='#'>Brands</a>
+                        <Link to='/admin/brands'>Brands</Link>
                     </li>
                     <li>
                         <a href='#'>Products</a>
@@ -33,7 +33,7 @@ const Sidebar = () => {
                         <a href='#'>Change Password</a>
                     </li>
                     <li>
-                        <a href='#' onClick={logout}><strong>Logout</strong></a>
+                        <a href='#' onClick={logout}>Logout</a>
                     </li>
                 </ul>
             </div>

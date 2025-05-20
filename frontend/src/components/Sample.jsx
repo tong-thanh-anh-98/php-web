@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import Layout from '../../common/Layout'
 import Sidebar from '../../common/Sidebar'
 
-const Show = () => {
+const Sample = () => {
     return (
         <Layout>
             <div className='container'>
@@ -27,4 +27,4 @@ const Show = () => {
     )
 }
 
-export default Show
+export default Sample

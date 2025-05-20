@@ -32,7 +32,7 @@ class AuthController extends Controller
 
                 return response()->json([
                     'status' => 200,
-                    'message' => 'Đăng nhập thành công.',
+                    'message' => 'You have successfully logged in.',
                     'token' => $token,
                     'id' => $user->id,
                     'name' => $user->name,
@@ -40,13 +40,13 @@ class AuthController extends Controller
             } else {
                 return response()->json([
                     'status' => 401,
-                    'message' => 'Tài khoản của bạn không được phép thực hiện thao tác này.'
+                    'message' => 'This account is not an admin. Please sign in with an admin account to continue.'
                 ], 401);
             }
         } else {
             return response()->json([
                 'status' => 401,
-                'message' => 'Thông tin đăng nhập không chính xác.'
+                'message' => 'The email or password you entered is incorrect. Please try again.'
             ], 401);
         }
     }

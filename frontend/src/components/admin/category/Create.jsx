@@ -12,28 +12,55 @@ const Create = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const navigate = useNavigate();
 
-  const saveCategory = (data) => {
-    setDisable(true)
-    console.log(data)
-    fetch(`${apiUrl}/categories`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${adminToken()}`
-      },
-      body: JSON.stringify(data)
-    }).then(res => res.json())
-      .then(result => {
-        setDisable(false);
-        if (result.status === 200) {
-          toast.success(result.message);
-          navigate('/admin/categories')
-        } else {
-          console.log('Something went wrong.')
-        }
+  // const saveCategory = (data) => {
+  //   setDisable(true)
+  //   console.log(data)
+  //   fetch(`${apiUrl}/categories`, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Accept': 'application/json',
+  //       'Authorization': `Bearer ${adminToken()}`
+  //     },
+  //     body: JSON.stringify(data)
+  //   }).then(res => res.json())
+  //     .then(result => {
+  //       setDisable(false);
+  //       if (result.status === 200) {
+  //         toast.success(result.message);
+  //         navigate('/admin/categories')
+  //       } else {
+  //         console.log('Something went wrong.')
+  //       }
+  //     });
+  // }
+  const saveCategory = async (data) => {
+    setDisable(true);
+    try {
+      const response = await fetch(`${apiUrl}/categories`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${adminToken()}`
+        },
+        body: JSON.stringify(data)
       });
-  }
+
+      const result = await response.json();
+      if (result.status === 200) {
+        toast.success(result.message || 'Category created successfully.');
+        navigate('/admin/categories');
+      } else {
+        toast.error(result.message || 'An error occurred. Please try again.');
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+      toast.error('Unable to connect to the server.');
+    } finally {
+      setDisable(false);
+    }
+  };
 
   return (
     <Layout>
@@ -76,7 +103,7 @@ const Create = () => {
                       className={`form-control ${errors.status && 'is-invalid'}`}>
                       <option value="">Select a status</option>
                       <option value="1">Active</option>
-                      <option value="0">Inactive</option>
+                      <option value="0">Block</option>
                     </select>
                     {
                       errors.status && <p className='invalid-feedback'>{errors.status?.message}</p>
@@ -84,9 +111,12 @@ const Create = () => {
                   </div>
                 </div>
               </div>
-              <button
+              {/* <button
                 disabled={disable}
-                type="submit" className='btn btn-primary mt-3'>Create</button>
+                type="submit" className='btn btn-primary mt-3'>Create</button> */}
+              <button disabled={disable} type="submit" className="btn btn-primary mt-3">
+                {disable ? 'Creating...' : 'Create'}
+              </button>
             </form>
           </div>
         </div>

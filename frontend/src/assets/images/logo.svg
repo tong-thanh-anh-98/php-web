@@ -1,0 +1,14 @@
+<svg width="200" height="70" viewBox="0 0 200 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Nền bo góc -->
+  <rect width="200" height="70" rx="15" fill="transparent"></rect>
+
+  <!-- Biểu tượng giỏ hàng -->
+  <g transform="translate(10, 20)" fill="black">
+    <path d="M3 1H5L7.68 9.39C7.86 9.93 8.36 10.29 8.93 10.29H16.55C17.22 10.29 17.8 9.84 17.96 9.2L20 2.5H6" stroke="black" stroke-width="1.5" fill="none"></path>
+    <circle cx="8" cy="14" r="1.5"></circle>
+    <circle cx="16" cy="14" r="1.5"></circle>
+  </g>
+
+  <!-- Chữ "eCommerce" -->
+  <text x="40" y="45" font-size="28" font-family="Arial, sans-serif" fill="black">eCommerce</text>
+</svg>

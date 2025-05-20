@@ -14,7 +14,8 @@ class BrandController extends Controller
      */
     public function index()
     {
-        $brands = Brand::orderBy('created_at', 'DESC');
+        $brands = Brand::orderBy('created_at', 'DESC')->get();
+
         return response()->json(
             [
                 'status' => 200,
@@ -44,7 +45,7 @@ class BrandController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Đã tạo thành công.',
+            'message' => 'Brand has been created successfully.',
             'data' => $brand
         ], 200);
     }
@@ -59,7 +60,7 @@ class BrandController extends Controller
         if ($brand === null) {
             return response()->json([
                 'status' => 404,
-                'message' => 'Dữ liệu không tồn tại.',
+                'message' => 'Brand not found.',
             ], 404);
         }
 
@@ -86,7 +87,7 @@ class BrandController extends Controller
         if (!$brand) {
             return response()->json([
                 'status' => 404,
-                'message' => 'Dữ liệu không tồn tại.',
+                'message' => 'Brand not found.',
             ], 404);
         }
 
@@ -97,7 +98,7 @@ class BrandController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Đã cập nhật thành công.',
+            'message' => 'Brand has been updated successfully.',
             'data' => $brand
         ], 200);
     }
@@ -112,7 +113,7 @@ class BrandController extends Controller
         if (!$brand) {
             return response()->json([
                 'status' => 404,
-                'message' => 'Data not found.',
+                'message' => 'Brand not found.',
             ], 404);
         }
 
@@ -120,7 +121,7 @@ class BrandController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Đã xóa thành công.',
+            'message' => 'Brand has been deleted successfully.',
         ], 200);
     }
 }

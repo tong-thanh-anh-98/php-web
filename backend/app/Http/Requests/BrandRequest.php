@@ -22,9 +22,19 @@ class BrandRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-             'name' => 'required|string|max:255',
-            'status' => 'nullable|in:0,1' // 1: kích hoạt, 0: ẩn
+            'status' => 'required|in:0,1'
         ];
+
+        if ($this->isMethod('post')) {
+            // Create
+            $rules['name'] = 'required|string|max:255|unique:brands,name';
+        }
+
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
+            // Update
+            $brandId = $this->route('brand');
+            $rules['name'] = 'required|string|max:255|unique:brands,name,' . $brandId;
+        }
 
         return $rules;
     }

@@ -11,6 +11,9 @@ import { AdminRequireAuth } from './components/admin/AdminRequireAuth';
 import { default as ShowCategories } from './components/admin/category/Show';
 import { default as CreateCategories } from './components/admin/category/Create';
 import { default as EditCategories } from './components/admin/category/Edit';
+import { default as ShowBrands } from './components/admin/brand/Show';
+import { default as CreateBrands } from './components/admin/brand/Create';
+import { default as EditBrands } from './components/admin/brand/Edit';
 
 function App() {
   return (
@@ -48,9 +51,42 @@ function App() {
             </AdminRequireAuth>
           } />
 
+          <Route path="/admin/brands" element={
+            <AdminRequireAuth>
+              <ShowBrands />
+            </AdminRequireAuth>
+          } />
+
+          <Route path="/admin/brands/create" element={
+            <AdminRequireAuth>
+              <CreateBrands />
+            </AdminRequireAuth>
+          } />
+
+          <Route path="/admin/brands/edit/:id" element={
+            <AdminRequireAuth>
+              <EditBrands />
+            </AdminRequireAuth>
+          } />
+
         </Routes>
       </BrowserRouter>
-      <ToastContainer />
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable={false}
+        pauseOnHover={false}
+        limit={1}
+        toastClassName="custom-toast"
+        bodyClassName="custom-toast-body"
+      />
+
     </>
   )
 }

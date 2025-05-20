@@ -22,21 +22,20 @@ class CategoryRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name' => 'required|string|max:255',
-            'status' => 'required|in:0,1' // 0: ẩn, 1: kích hoạt
-        ];
+        'status' => 'required|in:0,1'
+    ];
 
-        return $rules;
+    if ($this->isMethod('post')) {
+        // Create
+        $rules['name'] = 'required|string|max:255|unique:categories,name';
     }
 
-    // public function messages(): array
-    // {
-    //     return [
-    //         'name.required' => 'Tên danh mục là bắt buộc.',
-    //         'name.string' => 'Tên danh mục phải là chuỗi.',
-    //         'name.max' => 'Tên danh mục không được vượt quá 255 ký tự.',
-    //         'status.required' => 'Bắt buộc chọn 1 trạng thái.',
-    //         'status.in' => 'Trạng thái phải là 0 hoặc 1.'
-    //     ];
-    // }
+    if ($this->isMethod('put') || $this->isMethod('patch')) {
+        // Update
+        $categoryId = $this->route('category'); // get ID from route /categories/{category}
+        $rules['name'] = 'required|string|max:255|unique:categories,name,' . $categoryId;
+    }
+
+    return $rules;
+    }
 }

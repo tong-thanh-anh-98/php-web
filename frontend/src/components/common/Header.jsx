@@ -1,4 +1,4 @@
-import Logo from '../../assets/images/logo-2025.png';
+import Logo from '../../assets/images/logo-1.svg';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { Link } from 'react-router-dom';

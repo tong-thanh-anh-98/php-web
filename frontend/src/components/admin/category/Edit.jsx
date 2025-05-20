@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Layout from '../../common/Layout';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Sidebar from '../../common/Sidebar';
@@ -11,34 +11,85 @@ const Edit = () => {
   // const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
   const params = useParams();
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({
-    defaultValues: async () => {
-      fetch(`${apiUrl}/categories/${params.id}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${adminToken()}`
+  // const { register, handleSubmit, reset, formState: { errors } } = useForm({
+  //   defaultValues: async () => {
+  //     fetch(`${apiUrl}/categories/${params.id}`, {
+  //       method: 'GET',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Accept': 'application/json',
+  //         'Authorization': `Bearer ${adminToken()}`
+  //       }
+  //     })
+  //       .then(res => res.json())
+  //       .then(result => {
+  //         console.log(result);
+  //         if (result.status === 200) {
+  //           // setCategories(result.data);
+  //           reset({
+  //             name: result.data.name,
+  //             status: result.data.status,
+  //           })
+  //         } else {
+  //           console.log('Something went wrong.')
+  //         }
+  //       });
+  //   }
+  // });
+  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  useEffect(() => {
+    // Fetch category data to pre-fill form
+    fetch(`${apiUrl}/categories/${params.id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${adminToken()}`
+      }
+    })
+      .then(res => res.json())
+      .then(result => {
+        if (result.status === 200) {
+          reset({
+            name: result.data.name,
+            status: result.data.status,
+          });
+        } else if (result.status === 404) {
+          toast.error(result.message || 'Category not found.');
+          navigate('/admin/categories');
+        } else {
+          toast.error('An error occurred while loading the category data.');
         }
       })
-        .then(res => res.json())
-        .then(result => {
-          console.log(result);
-          if (result.status === 200) {
-            // setCategories(result.data);
-            reset({
-              name: result.data.name,
-              status: result.data.status,
-            })
-          } else {
-            console.log('Something went wrong.')
-          }
-        });
-    }
-  });
+      .catch(err => {
+        console.error('Fetch error:', err);
+        toast.error('Unable to connect to the server. Please try again later.');
+      });
+  }, [params.id, reset, navigate]);
 
+  // const updateCategory = (data) => {
+  //   setDisable(true)
+  //   fetch(`${apiUrl}/categories/${params.id}`, {
+  //     method: 'PUT',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Accept': 'application/json',
+  //       'Authorization': `Bearer ${adminToken()}`
+  //     },
+  //     body: JSON.stringify(data)
+  //   }).then(res => res.json())
+  //     .then(result => {
+  //       setDisable(false);
+  //       if (result.status === 200) {
+  //         toast.success(result.message);
+  //         navigate('/admin/categories')
+  //       } else {
+  //         console.log('Something went wrong.')
+  //       }
+  //     });
+  // }
   const updateCategory = (data) => {
-    setDisable(true)
+    setDisable(true);
     fetch(`${apiUrl}/categories/${params.id}`, {
       method: 'PUT',
       headers: {
@@ -47,17 +98,25 @@ const Edit = () => {
         'Authorization': `Bearer ${adminToken()}`
       },
       body: JSON.stringify(data)
-    }).then(res => res.json())
+    })
+      .then(res => res.json())
       .then(result => {
         setDisable(false);
         if (result.status === 200) {
-          toast.success(result.message);
-          navigate('/admin/categories')
+          toast.success(result.message || 'Category updated successfully.');
+          navigate('/admin/categories');
         } else {
-          console.log('Something went wrong.')
+          toast.error(result.message || 'Failed to update category. Please try again.');
+          console.error('Update failed:', result);
         }
+      })
+      .catch(err => {
+        setDisable(false);
+        console.error('Update error:', err);
+        toast.error('Unable to connect to the server. Please try again later.');
       });
-  }
+  };
+
   return (
     <Layout>
       <div className='container'>
@@ -99,7 +158,7 @@ const Edit = () => {
                       className={`form-control ${errors.status && 'is-invalid'}`}>
                       <option value="">Select a status</option>
                       <option value="1">Active</option>
-                      <option value="0">Inactive</option>
+                      <option value="0">Block</option>
                     </select>
                     {
                       errors.status && <p className='invalid-feedback'>{errors.status?.message}</p>
@@ -107,9 +166,12 @@ const Edit = () => {
                   </div>
                 </div>
               </div>
-              <button
+              {/* <button
                 disabled={disable}
-                type="submit" className='btn btn-primary mt-3'>Update</button>
+                type="submit" className='btn btn-primary mt-3'>Update</button> */}
+              <button disabled={disable} type="submit" className="btn btn-primary mt-3">
+                {disable ? 'Updating...' : 'Update'}
+              </button>
             </form>
           </div>
         </div>
