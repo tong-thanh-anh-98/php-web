@@ -17,3 +17,15 @@
   + npm i swiper
   + npm i react-simple-star-rating
   + npm install react-hook-form
+
+  {
+  "title": "product 1",
+  "price": 50000,
+  "description": "description of product 1",
+  "category_id": 1,
+  "brand_id": 1,
+  "sku": "sku0000001",
+  "barcode": "001122",
+  "status": 1,
+  "is_featured": "no"
+}

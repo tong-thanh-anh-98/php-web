@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\admin\ProductController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\admin\AuthController;
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\CategoryController;
+use App\Http\Controllers\admin\SizeController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -21,4 +23,6 @@ Route::post('/admin/login', [AuthController::class, 'authenticate']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('brands', BrandController::class);
+    Route::apiResource('sizes', SizeController::class);
+    Route::apiResource('products', ProductController::class);
 });
