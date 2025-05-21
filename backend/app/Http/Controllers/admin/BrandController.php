@@ -15,6 +15,9 @@ class BrandController extends Controller
     public function index()
     {
         $brands = Brand::orderBy('created_at', 'DESC')->get();
+        // pagination
+        // $perPage = $request->input('per_page', 10); // Số lượng mỗi trang (mặc định 10)
+        // $brands = Brand::orderBy('created_at', 'DESC')->paginate($perPage);
 
         return response()->json(
             [
@@ -38,7 +41,7 @@ class BrandController extends Controller
      */
     public function store(BrandRequest $request)
     {
-         $brand = Brand::create([
+        $brand = Brand::create([
             'name' => $request->name,
             'status' => $request->status,
         ]);
