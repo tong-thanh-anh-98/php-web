@@ -27,6 +27,7 @@ class Product extends Model
         'is_featured',
     ];
 
+    protected $appends = ['image_url'];
     public function price(): Attribute
     {
         return Attribute::make(
@@ -59,5 +60,14 @@ class Product extends Model
     public function brand()
     {
         return $this->belongsTo(Brand::class);
+    }
+
+    public function getImageUrlAttribute()
+    {
+        if ($this->image === "") {
+            return "";
+        }
+
+        return asset('/uploads/products/small/' . $this->image);
     }
 }

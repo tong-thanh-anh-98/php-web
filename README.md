@@ -18,6 +18,7 @@
   + npm i swiper
   + npm i react-simple-star-rating
   + npm install react-hook-form
+  + npm i jodit-react
 
   {
   "title": "title name",

@@ -53,7 +53,7 @@ class ProductController extends Controller
                     // Large thumbnail
                     $extArray = explode('.', $tempImage->name);
                     $ext = end($extArray);
-                    $imageName = $product->id . '_' . time() . '.' . $ext;
+                    $imageName = $product->id . '_' . time() . '_' . $key . '.' . $ext;
 
                     $manager = new ImageManager(new Driver());
                     $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
@@ -63,7 +63,7 @@ class ProductController extends Controller
                     // Small thumbnail
                     $manager = new ImageManager(new Driver());
                     $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
-                    $img->coverDown(400, 460);
+                    $img->coverDown(420, 600);
                     $img->save(public_path('uploads/products/small/' . $imageName));
 
                     if ($key === 0) {
@@ -95,8 +95,8 @@ class ProductController extends Controller
     public function show(string $id)
     {
         try {
-            // $product = Product::with(['category', 'brand'])->findOrFail($id);
-            $product = Product::findOrFail($id);
+            $product = Product::with(['category', 'brand'])->findOrFail($id);
+            // $product = Product::findOrFail($id);
 
             return response()->json([
                 'message' => 'Product fetched successfully.',
@@ -133,6 +133,44 @@ class ProductController extends Controller
             $product = Product::findOrFail($id);
             $data = $request->validated();
             $product->update($data);
+
+            if (!empty($request->gallery)) {
+                // 🔥 XÓA ẢNH CŨ nếu tồn tại
+                if (!empty($product->image)) {
+                    $oldLarge = public_path('uploads/products/large/' . $product->image);
+                    $oldSmall = public_path('uploads/products/small/' . $product->image);
+
+                    if (file_exists($oldLarge)) unlink($oldLarge);
+                    if (file_exists($oldSmall)) unlink($oldSmall);
+                }
+
+                // 🖼️ TẠO ẢNH MỚI
+                foreach ($request->gallery as $key => $tempImageId) {
+                    $tempImage = TempImage::find($tempImageId);
+                    if (!$tempImage) continue;
+
+                    $extArray = explode('.', $tempImage->name);
+                    $ext = end($extArray);
+                    $imageName = $product->id . '_' . time() . '_' . $key . '.' . $ext;
+
+                    // Large
+                    $manager = new ImageManager(new Driver());
+                    $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
+                    $img->scaleDown(1200);
+                    $img->save(public_path('uploads/products/large/' . $imageName));
+
+                    // Small
+                    $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
+                    $img->coverDown(400, 460);
+                    $img->save(public_path('uploads/products/small/' . $imageName));
+
+                    // Update main image if it is the first image
+                    if ($key === 0) {
+                        $product->image = $imageName;
+                        $product->save();
+                    }
+                }
+            }
 
             return response()->json([
                 'status' => 200,
