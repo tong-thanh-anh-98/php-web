@@ -28,6 +28,7 @@ class Product extends Model
     ];
 
     protected $appends = ['image_url'];
+
     public function price(): Attribute
     {
         return Attribute::make(

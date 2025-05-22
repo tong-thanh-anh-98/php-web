@@ -135,7 +135,6 @@ class ProductController extends Controller
             $product->update($data);
 
             if (!empty($request->gallery)) {
-                // 🔥 XÓA ẢNH CŨ nếu tồn tại
                 if (!empty($product->image)) {
                     $oldLarge = public_path('uploads/products/large/' . $product->image);
                     $oldSmall = public_path('uploads/products/small/' . $product->image);
@@ -144,7 +143,6 @@ class ProductController extends Controller
                     if (file_exists($oldSmall)) unlink($oldSmall);
                 }
 
-                // 🖼️ TẠO ẢNH MỚI
                 foreach ($request->gallery as $key => $tempImageId) {
                     $tempImage = TempImage::find($tempImageId);
                     if (!$tempImage) continue;
