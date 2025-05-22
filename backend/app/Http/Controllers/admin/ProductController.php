@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\admin;
 
 use App\Models\Product;
-use Illuminate\Http\Request;
+use App\Models\TempImage;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Intervention\Image\ImageManager;
 use App\Http\Requests\ProductRequest;
+use Intervention\Image\Drivers\Gd\Driver;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ProductController extends Controller
 {
@@ -41,13 +44,34 @@ class ProductController extends Controller
     {
         try {
             $data = $request->validated();
-
-            if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('products', 'public');
-                $data['image'] = $imagePath;
-            }
-
             $product = Product::create($data);
+
+            if (!empty($request->gallery)) {
+                foreach ($request->gallery as $key => $tempImageId) {
+                    $tempImage = TempImage::find($tempImageId);
+
+                    // Large thumbnail
+                    $extArray = explode('.', $tempImage->name);
+                    $ext = end($extArray);
+                    $imageName = $product->id . '_' . time() . '.' . $ext;
+
+                    $manager = new ImageManager(new Driver());
+                    $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
+                    $img->scaleDown(1200);
+                    $img->save(public_path('uploads/products/large/' . $imageName));
+
+                    // Small thumbnail
+                    $manager = new ImageManager(new Driver());
+                    $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
+                    $img->coverDown(400, 460);
+                    $img->save(public_path('uploads/products/small/' . $imageName));
+
+                    if ($key === 0) {
+                        $product->image = $imageName;
+                        $product->save();
+                    }
+                }
+            }
 
             return response()->json([
                 'status' => 201,
@@ -70,7 +94,26 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try {
+            // $product = Product::with(['category', 'brand'])->findOrFail($id);
+            $product = Product::findOrFail($id);
+
+            return response()->json([
+                'message' => 'Product fetched successfully.',
+                'data' => $product
+            ], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Product not found.'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong.',
+                'error' => $e->getMessage(),
+                'data' => null
+            ], 500);
+        }
     }
 
     /**
@@ -84,9 +127,27 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProductRequest $request, string $id)
     {
-        //
+        try {
+            $product = Product::findOrFail($id);
+            $data = $request->validated();
+            $product->update($data);
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Product updated successfully.',
+                'data' => $product
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Error while updating product: ' . $e->getMessage());
+
+            return response()->json([
+                'status' => 500,
+                'message' => 'An error occurred while updating the product.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -94,6 +155,28 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $product = Product::findOrFail($id);
+
+            $product->delete();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Product deleted successfully.'
+            ], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Product not found.'
+            ], 404);
+        } catch (\Exception $e) {
+            Log::error('Error deleting product: ' . $e->getMessage());
+
+            return response()->json([
+                'status' => 500,
+                'message' => 'An error occurred while deleting the product.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

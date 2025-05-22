@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\ProductController;
+use App\Http\Controllers\admin\TempImageController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\admin\AuthController;
@@ -25,4 +26,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('brands', BrandController::class);
     Route::apiResource('sizes', SizeController::class);
     Route::apiResource('products', ProductController::class);
+    Route::apiResource('temp-images', TempImageController::class);
 });
