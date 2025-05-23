@@ -106,10 +106,10 @@ const Show = () => {
                                                 products && products.map(product => {
                                                     return (
                                                         <tr key={product.id}>
-                                                            {/* React sử dụng key để xác định phần tử nào được thêm, xoá hoặc cập nhật — giúp tối ưu hiệu suất render. */}
+                                                            {/* React uses the key to determine which element is added, removed, or updated — which helps optimize rendering performance. */}
                                                             <td>{product.id}</td>
                                                             <td>
-                                                                <img src={product.image_url} alt={product.title} style={{ width: '50px', height: '60px'}} />
+                                                                <img src={product.image_url} alt={product.title} style={{ width: '65px', height: '65px'}} />
                                                             </td>
                                                             <td>{product.title}</td>
                                                             <td>{product.price}</td>

@@ -1,20 +1,27 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import Layout from '../../common/Layout';
 import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '../../common/Sidebar';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { adminToken, apiUrl } from '../../common/http';
 import { toast } from 'react-toastify';
 import JoditEditor from 'jodit-react';
 
 const Create = ({ placeholder }) => {
     const editor = useRef(null);
-    const [content, setContent] = useState('');
+    // const [content, setContent] = useState(''); // Instead use Controller for Jodit.
     const [disable, setDisable] = useState(false);
     const [categories, setCategories] = useState([]);
     const [brands, setBrands] = useState([]);
-    const { register, handleSubmit, setError, formState: { errors } } = useForm();
+    const [gallery, setGallery] = useState([]);
+    const [galleryImages, setGalleryImages] = useState([]);
     const navigate = useNavigate();
+    const { register,
+        handleSubmit,
+        setError,
+        control,
+        formState: { errors }
+    } = useForm();
 
     const config = useMemo(() => ({
         readonly: false, // all options from https://xdsoft.net/jodit/docs/,
@@ -25,7 +32,8 @@ const Create = ({ placeholder }) => {
 
     const saveProduct = async (data) => {
         // const formData = { ...data, "content": content };
-        data.description = content;
+        // data.description = content; // Instead use Controller for Jodit.
+        data.gallery = gallery;
         setDisable(true);
         try {
             const response = await fetch(`${apiUrl}/products`, {
@@ -106,9 +114,71 @@ const Create = ({ placeholder }) => {
         }
     };
 
+    const handleFile = async (e) => {
+        const formData = new FormData();
+        const file = e.target.files[0];
+        formData.append("image", file);
+        setDisable(true);
+
+        // const res = await fetch(`${apiUrl}/temp-images`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Authorization': `Bearer ${adminToken()}`
+        //     },
+        //     body: formData
+        // })
+        //     .then(res => res.json())
+        //     .then(result => {
+        //         console.log(result);
+        //         gallery.push(result.data.id);
+        //         setGallery(gallery);
+        //         setDisable(false);
+        //     })
+        try {
+            const res = await fetch(`${apiUrl}/temp-images`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${adminToken()}`
+                },
+                body: formData
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.message || 'Upload failed');
+            }
+
+            const result = await res.json();
+            console.log(result);
+
+            const newGallery = [...gallery, result.data.id];
+            setGallery(newGallery);
+
+            // galleryImages.push(result.data.image_url);
+            // setGalleryImages(galleryImages);
+            const newGalleryImage = [...galleryImages, result.data.image_url];
+            setGalleryImages(newGalleryImage);
+        } catch (error) {
+            console.error('Upload error:', error.message);
+            alert('An error occurred while uploading the image: ' + error.message);
+        } finally {
+            setDisable(false);
+            e.target.value = "";
+        }
+    }
+
+    const deleteImage = (image) => {
+        const newGallery = galleryImages.filter(gallery => gallery != image);
+        setGalleryImages(newGallery);
+    }
+
     useEffect(() => {
         fetchCategories();
         fetchBrands();
+        setGallery([]);
+        setGalleryImages([]);
     }, []);
 
     return (
@@ -190,12 +260,26 @@ const Create = ({ placeholder }) => {
 
                                     <div className='mb-3'>
                                         <label htmlFor='' className='form-label'>Description</label>
-                                        <JoditEditor
+                                        {/* <JoditEditor
                                             ref={editor}
                                             value={content}
                                             config={config}
                                             tabIndex={1} // tabIndex of textarea
                                             onBlur={newContent => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
+                                        /> */}
+                                        <Controller
+                                            name="description"
+                                            control={control}
+                                            defaultValue=""
+                                            render={({ field }) => (
+                                                <JoditEditor
+                                                    ref={editor}
+                                                    value={field.value}
+                                                    config={config}
+                                                    tabIndex={1}
+                                                    onBlur={field.onChange}
+                                                />
+                                            )}
                                         />
                                     </div>
 
@@ -306,10 +390,25 @@ const Create = ({ placeholder }) => {
                                     <div className='mb-3'>
                                         <label htmlFor='' className='form-label'>Image</label>
                                         <input
-                                            {...register('image')}
+                                            onChange={handleFile}
                                             type='file'
-                                            className='form-control'
-                                            placeholder='Enter image' />
+                                            className='form-control' />
+                                    </div>
+                                    <div className='mb-3'>
+                                        <div className='row'>
+                                            {
+                                                galleryImages && galleryImages.map((image, index) => {
+                                                    return (
+                                                        <div className='col-md-3' key={`image-${index}`}>
+                                                            <div className='card shadow'>
+                                                                <img src={image} alt='show image' className='w-100' />
+                                                            </div>
+                                                            <button className='btn btn-danger mt-3 w-100' onClick={() => deleteImage(image)}>delete</button>
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -9,7 +9,6 @@ import Notate from "../../Notate";
 
 const Show = () => {
     const [brands, setBrands] = useState([]);
-    // const [pagination, setPagination] = useState({ current_page: 1, last_page: 1 }); // pagination
     const [loader, setLoader] = useState(false);
 
     // const fetchBrands = async () => {
@@ -31,11 +30,9 @@ const Show = () => {
     //             }
     //         });
     // }
-    // const fetchBrands = async (page = 1) => { // pagination
     const fetchBrands = async () => {
         setLoader(true);
         try {
-            // const response = await fetch(`${apiUrl}/brands?page=${page}&per_page=3`, { // pagination
             const response = await fetch(`${apiUrl}/brands`, {
                 method: 'GET',
                 headers: {
@@ -47,12 +44,6 @@ const Show = () => {
             const result = await response.json();
             if (result.status === 200) {
                 setBrands(result.data);
-                // pagination
-                // setBrands(result.data.data);
-                // setPagination({
-                //     current_page: result.data.current_page,
-                //     last_page: result.data.last_page
-                // });
             } else {
                 toast.error(result.message || 'Failed to fetch brands. Please try again.');
             }
@@ -152,7 +143,6 @@ const Show = () => {
                                                 brands && brands.map(brand => {
                                                     return (
                                                         <tr key={brand.id}>
-                                                            {/* React sử dụng key để xác định phần tử nào được thêm, xoá hoặc cập nhật — giúp tối ưu hiệu suất render. */}
                                                             <td>{brand.id}</td>
                                                             <td>{brand.name}</td>
                                                             <td>
@@ -183,44 +173,6 @@ const Show = () => {
                                         </tbody>
                                     </table>
                                 }
-                                {/* start pagination */}
-                                {/* <ul className="pagination">
-                                    <li className={`page-item ${pagination.current_page === 1 ? 'disabled' : ''}`}>
-                                        <button
-                                            className="page-link"
-                                            onClick={() => fetchBrands(pagination.current_page - 1)}
-                                            disabled={pagination.current_page === 1}
-                                        >
-                                            Previous
-                                        </button>
-                                    </li>
-                                    {
-                                        [...Array(pagination.last_page)].map((_, index) => {
-                                            const page = index + 1;
-                                            return (
-                                                <li key={page} className={`page-item ${pagination.current_page === page ? 'active' : ''}`}>
-                                                    <button
-                                                        className="page-link"
-                                                        onClick={() => fetchBrands(page)}
-                                                        style={{ cursor: 'pointer' }}
-                                                    >
-                                                        {page}
-                                                    </button>
-                                                </li>
-                                            );
-                                        })
-                                    }
-                                    <li className={`page-item ${pagination.current_page === pagination.last_page ? 'disabled' : ''}`}>
-                                        <button
-                                            className="page-link"
-                                            onClick={() => fetchBrands(pagination.current_page + 1)}
-                                            disabled={pagination.current_page === pagination.last_page}
-                                        >
-                                            Next
-                                        </button>
-                                    </li>
-                                </ul> */}
-                                {/* end pagination */}
                             </div>
                         </div>
                     </div>

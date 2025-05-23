@@ -10,7 +10,7 @@ const Edit = () => {
     const [disable, setDisable] = useState(false);
     const navigate = useNavigate();
     const params = useParams();
-
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
     // const { register, handleSubmit, reset, formState: { errors } } = useForm({
     //     defaultValues: async () => {
     //         fetch(`${apiUrl}/brands/${params.id}`, {
@@ -35,9 +35,8 @@ const Edit = () => {
     //             });
     //     }
     // });
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+
     useEffect(() => {
-        // Gọi API để lấy dữ liệu brand cần sửa
         fetch(`${apiUrl}/brands/${params.id}`, {
             method: 'GET',
             headers: {

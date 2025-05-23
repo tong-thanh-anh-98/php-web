@@ -32,4 +32,4 @@
   "is_featured": "no"
 }
 
-token login: 1|6EvkYKkV6SjZqwdtGJX5KJeC2fQDHBMfxyblOMnh94c996be
+token login: 2|uUm3FsZ73qAxCbpCp2laEFgPVgUTWO8noPbeYgHt198d111f

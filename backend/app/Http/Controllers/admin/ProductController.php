@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Models\Product;
+use App\Models\ProductImage;
 use App\Models\TempImage;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -18,7 +19,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::orderBy('created_at', 'DESC')->get();
+        $products = Product::orderBy('created_at', 'DESC')->with('product_images')->get();
 
         return response()->json(
             [
@@ -46,31 +47,39 @@ class ProductController extends Controller
             $data = $request->validated();
             $product = Product::create($data);
 
+            // if (!empty($request->gallery)) {
+            //     foreach ($request->gallery as $key => $tempImageId) {
+            //         $tempImage = TempImage::find($tempImageId);
+
+            //         // Large thumbnail
+            //         $extArray = explode('.', $tempImage->name);
+            //         $ext = end($extArray);
+            //         $imageName = $product->id . '_' . time() . '_' . $key . '.' . $ext;
+
+            //         $manager = new ImageManager(new Driver());
+            //         $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
+            //         $img->scaleDown(1200);
+            //         $img->save(public_path('uploads/products/large/' . $imageName));
+
+            //         // Small thumbnail
+            //         $manager = new ImageManager(new Driver());
+            //         $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
+            //         $img->coverDown(420, 600);
+            //         $img->save(public_path('uploads/products/small/' . $imageName));
+
+            //         $productImage = new ProductImage();
+            //         $productImage->image = $imageName;
+            //         $productImage->product_id = $product->id;
+            //         $productImage->save();
+
+            //         if ($key === 0) {
+            //             $product->image = $imageName;
+            //             $product->save();
+            //         }
+            //     }
+            // }
             if (!empty($request->gallery)) {
-                foreach ($request->gallery as $key => $tempImageId) {
-                    $tempImage = TempImage::find($tempImageId);
-
-                    // Large thumbnail
-                    $extArray = explode('.', $tempImage->name);
-                    $ext = end($extArray);
-                    $imageName = $product->id . '_' . time() . '_' . $key . '.' . $ext;
-
-                    $manager = new ImageManager(new Driver());
-                    $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
-                    $img->scaleDown(1200);
-                    $img->save(public_path('uploads/products/large/' . $imageName));
-
-                    // Small thumbnail
-                    $manager = new ImageManager(new Driver());
-                    $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
-                    $img->coverDown(420, 600);
-                    $img->save(public_path('uploads/products/small/' . $imageName));
-
-                    if ($key === 0) {
-                        $product->image = $imageName;
-                        $product->save();
-                    }
-                }
+                $this->handleProductImages($product, $request->gallery);
             }
 
             return response()->json([
@@ -95,8 +104,7 @@ class ProductController extends Controller
     public function show(string $id)
     {
         try {
-            $product = Product::with(['category', 'brand'])->findOrFail($id);
-            // $product = Product::findOrFail($id);
+            $product = Product::with('product_images')->findOrFail($id);
 
             return response()->json([
                 'message' => 'Product fetched successfully.',
@@ -134,40 +142,56 @@ class ProductController extends Controller
             $data = $request->validated();
             $product->update($data);
 
+            // if (!empty($request->gallery)) {
+            //     if (!empty($product->image)) {
+            //         $oldLarge = public_path('uploads/products/large/' . $product->image);
+            //         $oldSmall = public_path('uploads/products/small/' . $product->image);
+
+            //         if (file_exists($oldLarge)) unlink($oldLarge);
+            //         if (file_exists($oldSmall)) unlink($oldSmall);
+            //     }
+
+            //     foreach ($request->gallery as $key => $tempImageId) {
+            //         $tempImage = TempImage::find($tempImageId);
+            //         if (!$tempImage) continue;
+
+            //         $extArray = explode('.', $tempImage->name);
+            //         $ext = end($extArray);
+            //         $imageName = $product->id . '_' . time() . '_' . $key . '.' . $ext;
+
+            //         // Large
+            //         $manager = new ImageManager(new Driver());
+            //         $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
+            //         $img->scaleDown(1200);
+            //         $img->save(public_path('uploads/products/large/' . $imageName));
+
+            //         // Small
+            //         $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
+            //         $img->coverDown(400, 460);
+            //         $img->save(public_path('uploads/products/small/' . $imageName));
+
+            //         $productImage = new ProductImage();
+            //         $productImage->image = $imageName;
+            //         $productImage->product_id = $product->id;
+            //         $productImage->save();
+
+            //         // Update main image if it is the first image
+            //         if ($key === 0) {
+            //             $product->image = $imageName;
+            //             $product->save();
+            //         }
+            //     }
+            // }
+
             if (!empty($request->gallery)) {
                 if (!empty($product->image)) {
                     $oldLarge = public_path('uploads/products/large/' . $product->image);
                     $oldSmall = public_path('uploads/products/small/' . $product->image);
-
                     if (file_exists($oldLarge)) unlink($oldLarge);
                     if (file_exists($oldSmall)) unlink($oldSmall);
                 }
 
-                foreach ($request->gallery as $key => $tempImageId) {
-                    $tempImage = TempImage::find($tempImageId);
-                    if (!$tempImage) continue;
-
-                    $extArray = explode('.', $tempImage->name);
-                    $ext = end($extArray);
-                    $imageName = $product->id . '_' . time() . '_' . $key . '.' . $ext;
-
-                    // Large
-                    $manager = new ImageManager(new Driver());
-                    $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
-                    $img->scaleDown(1200);
-                    $img->save(public_path('uploads/products/large/' . $imageName));
-
-                    // Small
-                    $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
-                    $img->coverDown(400, 460);
-                    $img->save(public_path('uploads/products/small/' . $imageName));
-
-                    // Update main image if it is the first image
-                    if ($key === 0) {
-                        $product->image = $imageName;
-                        $product->save();
-                    }
-                }
+                $this->handleProductImages($product, $request->gallery);
             }
 
             return response()->json([
@@ -213,6 +237,40 @@ class ProductController extends Controller
                 'message' => 'An error occurred while deleting the product.',
                 'error' => $e->getMessage()
             ], 500);
+        }
+    }
+
+    private function handleProductImages(Product $product, array $gallery): void
+    {
+        foreach ($gallery as $key => $tempImageId) {
+            $tempImage = TempImage::find($tempImageId);
+            if (!$tempImage) continue;
+
+            $ext = pathinfo($tempImage->name, PATHINFO_EXTENSION);
+            $imageName = $product->id . '_' . time() . '_' . $key . '.' . $ext;
+
+            $manager = new ImageManager(new Driver());
+
+            // Large thumbnail
+            $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
+            $img->scaleDown(1200);
+            $img->save(public_path('uploads/products/large/' . $imageName));
+
+            // Small thumbnail
+            $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
+            $img->coverDown(420, 600);
+            $img->save(public_path('uploads/products/small/' . $imageName));
+
+            // Save to DB
+            ProductImage::create([
+                'image' => $imageName,
+                'product_id' => $product->id,
+            ]);
+
+            if ($key === 0) {
+                $product->image = $imageName;
+                $product->save();
+            }
         }
     }
 }
