@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\ProductSize;
 use App\Models\ProductImage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -64,6 +65,11 @@ class Product extends Model
         return $this->belongsTo(Brand::class);
     }
 
+    public function product_sizes()
+    {
+        return $this->hasMany(ProductSize::class);
+    }
+
     public function product_images()
     {
         return $this->hasMany(ProductImage::class);
@@ -71,8 +77,11 @@ class Product extends Model
 
     public function getImageUrlAttribute()
     {
-        if ($this->image === "") {
-            return "";
+        // if ($this->image === "") {
+        //     return "";
+        // }
+        if (!$this->image || !file_exists(public_path('/uploads/products/small/' . $this->image))) {
+            return asset('/images/no_image.jpg');
         }
 
         return asset('/uploads/products/small/' . $this->image);

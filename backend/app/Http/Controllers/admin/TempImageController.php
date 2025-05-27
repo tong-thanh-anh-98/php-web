@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\admin;
 
 use App\Models\TempImage;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
 use Intervention\Image\ImageManager;
+use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Drivers\Gd\Driver;
 
 class TempImageController extends Controller
@@ -50,27 +51,16 @@ class TempImageController extends Controller
 
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
-
-                // $destinationPath = public_path('uploads/temp/');
-                // if (!file_exists($destinationPath)) {
-                //     mkdir($destinationPath, 0755, true);
-                // }
-
+                // thay getClientOriginalExtension() bằng extension(); và thay thế time() bằng Str::uuid() để đảm bảo tên file là duy nhất tuyệt đối.
+                $imageName = Str::uuid() . '.' . $image->extension();
                 $image->move(public_path('uploads/temp/'), $imageName);
             }
 
             $tempImage = TempImage::create(['name' => $imageName]);
 
-            // Create thumbnail
-            // $thumbPath = public_path('uploads/temp/thumb');
-            // if (!file_exists($thumbPath)) {
-            //     mkdir($thumbPath, 0755, true);
-            // }
-
             $manager = new ImageManager(new Driver());
             $img = $manager->read(public_path('uploads/temp/') . '/' . $imageName);
-            $img->coverDown(400, 450);
+            $img->coverDown(400, 460);
             $img->save(public_path('uploads/temp/thumb') . '/' . $imageName);
 
             return response()->json([
@@ -122,66 +112,7 @@ class TempImageController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        try {
-            $tempImage = TempImage::find($id);
-
-            if (!$tempImage) {
-                return response()->json([
-                    'status' => 404,
-                    'message' => 'Temp image not found.',
-                ], 404);
-            }
-
-            if (!$request->hasFile('image')) {
-                return response()->json([
-                    'status' => 422,
-                    'message' => 'No image file provided.',
-                ], 422);
-            }
-
-            $validator = Validator::make($request->all(), [
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => 422,
-                    'message' => 'Validation failed.',
-                    'errors' => $validator->errors(),
-                ], 422);
-            }
-
-            $oldImagePath = public_path('uploads/temp/' . $tempImage->name);
-            $oldThumbPath = public_path('uploads/temp/thumb/' . $tempImage->name);
-
-            if (file_exists($oldImagePath)) unlink($oldImagePath);
-            if (file_exists($oldThumbPath)) unlink($oldThumbPath);
-
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('uploads/temp/'), $imageName);
-
-            $tempImage->update(['name' => $imageName]);
-
-            $manager = new ImageManager(new Driver());
-            $img = $manager->read(public_path('uploads/temp/') . '/' . $imageName);
-            $img->coverDown(400, 450);
-            $img->save(public_path('uploads/temp/thumb') . '/' . $imageName);
-
-            return response()->json([
-                'status' => 200,
-                'message' => 'Temp image updated successfully.',
-                'data' => $tempImage
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error while updating temp image: ' . $e->getMessage());
-
-            return response()->json([
-                'status' => 500,
-                'message' => 'An error occurred while updating the temp image.',
-                'error' => app()->isDebug() ? $e->getMessage() : null
-            ], 500);
-        }
+        //
     }
 
     /**
@@ -189,41 +120,6 @@ class TempImageController extends Controller
      */
     public function destroy(string $id)
     {
-        $tempImage = TempImage::find($id);
-
-        if (!$tempImage) {
-            return response()->json([
-                'status' => 404,
-                'message' => 'Temp image not found.',
-            ], 404);
-        }
-
-        try {
-            // Xóa file ảnh chính và thumbnail nếu tồn tại
-            $imagePath = public_path('uploads/temp/' . $tempImage->name);
-            $thumbPath = public_path('uploads/temp/thumb/' . $tempImage->name);
-
-            if (file_exists($imagePath)) {
-                unlink($imagePath);
-            }
-            if (file_exists($thumbPath)) {
-                unlink($thumbPath);
-            }
-
-            $tempImage->delete();
-
-            return response()->json([
-                'status' => 200,
-                'message' => 'Temp image deleted successfully.',
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error while deleting temp image: ' . $e->getMessage());
-
-            return response()->json([
-                'status' => 500,
-                'message' => 'An error occurred while deleting the temp image.',
-                'error' => app()->isDebug() ? $e->getMessage() : null
-            ], 500);
-        }
+        //
     }
 }

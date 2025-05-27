@@ -24,7 +24,12 @@ Route::post('/admin/login', [AuthController::class, 'authenticate']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('brands', BrandController::class);
-    Route::apiResource('sizes', SizeController::class);
+    // Route::apiResource('sizes', SizeController::class);
+    Route::get('sizes', [SizeController::class, 'index']);
     Route::apiResource('products', ProductController::class);
-    Route::apiResource('temp-images', TempImageController::class);
+    // Route::apiResource('temp-images', TempImageController::class);
+    Route::post('temp-images', [TempImageController::class, 'store']);
+    Route::post('save-product-image', [ProductController::class,'saveProductImage']);
+    Route::get('change-product-default-image', [ProductController::class,'updateDefaultImage']);
+    Route::delete('delete-product-image/{id}', [ProductController::class,'deleteProductImage']);
 });

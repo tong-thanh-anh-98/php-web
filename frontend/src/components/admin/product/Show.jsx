@@ -109,7 +109,11 @@ const Show = () => {
                                                             {/* React uses the key to determine which element is added, removed, or updated — which helps optimize rendering performance. */}
                                                             <td>{product.id}</td>
                                                             <td>
-                                                                <img src={product.image_url} alt={product.title} style={{ width: '65px', height: '65px'}} />
+                                                                <img
+                                                                     src={product.image_url} 
+                                                                    alt={product.title}
+                                                                    style={{ width: '65px', height: '65px' }}
+                                                                />
                                                             </td>
                                                             <td>{product.title}</td>
                                                             <td>{product.price}</td>

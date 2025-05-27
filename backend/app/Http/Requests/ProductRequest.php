@@ -24,8 +24,8 @@ class ProductRequest extends FormRequest
     {
         return [
             'title'             => 'required|string|max:255',
-            'price'             => 'required|numeric|min:0',
-            'compare_price'     => 'nullable|numeric|gte:price',
+            'price'             => 'required|numeric',
+            'compare_price'     => 'nullable|numeric',
             'description'       => 'nullable|string',
             'short_description' => 'nullable|string',
             'category_id'       => 'required|exists:categories,id',

@@ -2,37 +2,40 @@ import React, { useEffect, useState, useMemo, useRef } from 'react';
 import Layout from '../../common/Layout';
 import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '../../common/Sidebar';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { adminToken, apiUrl } from '../../common/http';
 import { toast } from 'react-toastify';
 import JoditEditor from 'jodit-react';
 
 const Create = ({ placeholder }) => {
     const editor = useRef(null);
-    // const [content, setContent] = useState(''); // Instead use Controller for Jodit.
+    const [content, setContent] = useState('');
     const [disable, setDisable] = useState(false);
     const [categories, setCategories] = useState([]);
     const [brands, setBrands] = useState([]);
     const [gallery, setGallery] = useState([]);
     const [galleryImages, setGalleryImages] = useState([]);
     const navigate = useNavigate();
-    const { register,
-        handleSubmit,
-        setError,
-        control,
-        formState: { errors }
-    } = useForm();
+    const [sizes, setSizes] = useState([]);
+    const [sizesChecked, setSizesChecked] = useState([]);
 
     const config = useMemo(() => ({
-        readonly: false, // all options from https://xdsoft.net/jodit/docs/,
+        readonly: false,
         placeholder: placeholder || ''
     }),
         [placeholder]
     );
 
+    const {
+        register,
+        handleSubmit,
+        setError,
+        formState: { errors }
+    } = useForm();
+
     const saveProduct = async (data) => {
         // const formData = { ...data, "content": content };
-        // data.description = content; // Instead use Controller for Jodit.
+        data.description = content;
         data.gallery = gallery;
         setDisable(true);
         try {
@@ -114,13 +117,36 @@ const Create = ({ placeholder }) => {
         }
     };
 
+    const fetchSizes = async () => {
+        try {
+            const res = await fetch(`${apiUrl}/sizes`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${adminToken()}`
+                }
+            });
+            const result = await res.json();
+            if (result.status === 200) {
+                setSizes(result.data);
+            } else {
+                toast.error(result.message || 'Failed to load sizes.');
+                console.error('Fetch sizes failed:', result);
+            }
+        } catch (error) {
+            console.error('Fetch sizes error:', error);
+            toast.error('Unable to connect to the server. Please try again later.');
+        }
+    };
+
     const handleFile = async (e) => {
         const formData = new FormData();
         const file = e.target.files[0];
         formData.append("image", file);
         setDisable(true);
 
-        // const res = await fetch(`${apiUrl}/temp-images`, {
+        // await fetch(`${apiUrl}/temp-images`, {
         //     method: 'POST',
         //     headers: {
         //         'Accept': 'application/json',
@@ -130,10 +156,15 @@ const Create = ({ placeholder }) => {
         // })
         //     .then(res => res.json())
         //     .then(result => {
-        //         console.log(result);
-        //         gallery.push(result.data.id);
-        //         setGallery(gallery);
+
+        // gallery.push(result.data.id);
+        // setGallery(gallery);
+
+        // galleryImages.push(result.data.image_url);
+        // setGalleryImages(galleryImages);
+
         //         setDisable(false);
+        //         e.target.value = "";
         //     })
         try {
             const res = await fetch(`${apiUrl}/temp-images`, {
@@ -156,8 +187,6 @@ const Create = ({ placeholder }) => {
             const newGallery = [...gallery, result.data.id];
             setGallery(newGallery);
 
-            // galleryImages.push(result.data.image_url);
-            // setGalleryImages(galleryImages);
             const newGalleryImage = [...galleryImages, result.data.image_url];
             setGalleryImages(newGalleryImage);
         } catch (error) {
@@ -179,6 +208,7 @@ const Create = ({ placeholder }) => {
         fetchBrands();
         setGallery([]);
         setGalleryImages([]);
+        fetchSizes();
     }, []);
 
     return (
@@ -260,26 +290,12 @@ const Create = ({ placeholder }) => {
 
                                     <div className='mb-3'>
                                         <label htmlFor='' className='form-label'>Description</label>
-                                        {/* <JoditEditor
+                                        <JoditEditor
                                             ref={editor}
                                             value={content}
                                             config={config}
                                             tabIndex={1} // tabIndex of textarea
                                             onBlur={newContent => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
-                                        /> */}
-                                        <Controller
-                                            name="description"
-                                            control={control}
-                                            defaultValue=""
-                                            render={({ field }) => (
-                                                <JoditEditor
-                                                    ref={editor}
-                                                    value={field.value}
-                                                    config={config}
-                                                    tabIndex={1}
-                                                    onBlur={field.onChange}
-                                                />
-                                            )}
                                         />
                                     </div>
 
@@ -290,7 +306,7 @@ const Create = ({ placeholder }) => {
                                                 <label htmlFor='' className='form-label'>Price</label>
                                                 <input
                                                     {...register('price', { required: 'The price field is required' })}
-                                                    type='number'
+                                                    type='text'
                                                     className={`form-control ${errors.price && 'is-invalid'}`}
                                                     placeholder='Enter price' />
                                                 {
@@ -304,12 +320,9 @@ const Create = ({ placeholder }) => {
                                                 <label htmlFor='' className='form-label'>Discounted Price</label>
                                                 <input
                                                     {...register('compare_price')}
-                                                    type='number'
+                                                    type='text'
                                                     className='form-control'
                                                     placeholder='Enter discounted Price' />
-                                                {
-                                                    errors.compare_price && <p className='invalid-feedback'>{errors.compare_price?.message}</p>
-                                                }
                                             </div>
                                         </div>
                                     </div>
@@ -386,6 +399,37 @@ const Create = ({ placeholder }) => {
                                         }
                                     </div>
 
+                                    <h3 className='py-3 border-bottom mb-3'>Sizes</h3>
+                                    <div className='mb-3'>
+                                        {
+                                            sizes && sizes.map((size) => {
+                                                return (
+                                                    <div className="form-check-inline ps-2" key={`size-${size.id}`}>
+                                                        <input
+                                                            {...register('sizes')}
+                                                            checked={Array.isArray(sizesChecked) && sizesChecked.includes(size.id)}
+                                                            onChange={(e) => {
+                                                                const value = +e.target.value;
+                                                                if (e.target.checked) {
+                                                                    setSizesChecked(prev => [...prev, value]); // add size
+                                                                } else {
+                                                                    setSizesChecked(prev => prev.filter(id => id !== value)); // delete size
+                                                                }
+                                                            }}
+                                                            className="form-check-input"
+                                                            type="checkbox"
+                                                            value={size.id}
+                                                            id={`size-${size.id}`}
+                                                        />
+                                                        <label className="form-check-label ps-2" htmlFor={`size-${size.id}`}>
+                                                            {size.name}
+                                                        </label>
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                    </div>
+
                                     <h3 className='py-3 border-bottom mb-3'>Gallery</h3>
                                     <div className='mb-3'>
                                         <label htmlFor='' className='form-label'>Image</label>
@@ -395,7 +439,7 @@ const Create = ({ placeholder }) => {
                                             className='form-control' />
                                     </div>
                                     <div className='mb-3'>
-                                        <div className='row'>
+                                        <div className='row gy-3'>
                                             {
                                                 galleryImages && galleryImages.map((image, index) => {
                                                     return (

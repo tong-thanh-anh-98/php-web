@@ -3,14 +3,20 @@
 namespace App\Http\Controllers\admin;
 
 use App\Models\Product;
-use App\Models\ProductImage;
 use App\Models\TempImage;
+use App\Models\ProductSize;
+use Illuminate\Support\Str;
+use App\Models\ProductImage;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 use Intervention\Image\ImageManager;
 use App\Http\Requests\ProductRequest;
+use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ProductController extends Controller
 {
@@ -19,7 +25,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::orderBy('created_at', 'DESC')->with('product_images')->get();
+        $products = Product::orderBy('created_at', 'DESC')->with(['product_images', 'product_sizes'])->get();
 
         return response()->json(
             [
@@ -47,39 +53,47 @@ class ProductController extends Controller
             $data = $request->validated();
             $product = Product::create($data);
 
-            // if (!empty($request->gallery)) {
-            //     foreach ($request->gallery as $key => $tempImageId) {
-            //         $tempImage = TempImage::find($tempImageId);
+            if (!empty($request->sizes)) {
+                foreach ($request->sizes as $sizeId) {
+                    $productSize = new ProductSize();
+                    $productSize->size_id = $sizeId;
+                    $productSize->product_id = $product->id;
+                    $productSize->save();
+                }
+            }
 
-            //         // Large thumbnail
-            //         $extArray = explode('.', $tempImage->name);
-            //         $ext = end($extArray);
-            //         $imageName = $product->id . '_' . time() . '_' . $key . '.' . $ext;
-
-            //         $manager = new ImageManager(new Driver());
-            //         $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
-            //         $img->scaleDown(1200);
-            //         $img->save(public_path('uploads/products/large/' . $imageName));
-
-            //         // Small thumbnail
-            //         $manager = new ImageManager(new Driver());
-            //         $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
-            //         $img->coverDown(420, 600);
-            //         $img->save(public_path('uploads/products/small/' . $imageName));
-
-            //         $productImage = new ProductImage();
-            //         $productImage->image = $imageName;
-            //         $productImage->product_id = $product->id;
-            //         $productImage->save();
-
-            //         if ($key === 0) {
-            //             $product->image = $imageName;
-            //             $product->save();
-            //         }
-            //     }
-            // }
             if (!empty($request->gallery)) {
-                $this->handleProductImages($product, $request->gallery);
+                foreach ($request->gallery as $key => $tempImageId) {
+                    $tempImage = TempImage::find($tempImageId);
+
+                    // Large thumbnail
+                    // thay thế time() bằng Str::uuid() để đảm bảo tên file là duy nhất tuyệt đối.
+                    $extArray = explode('.', $tempImage->name);
+                    $ext = end($extArray);
+                    $imageName = $product->id . '-' . Str::uuid() . '.' . $ext;
+                    // $imageName = $product->id . '-' . Str::uuid() . '.' . $tempImage->extension();
+
+                    $manager = new ImageManager(new Driver());
+                    $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
+                    $img->scaleDown(1200);
+                    $img->save(public_path('uploads/products/large/' . $imageName));
+
+                    // Small thumbnail
+                    $manager = new ImageManager(new Driver());
+                    $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
+                    $img->coverDown(400, 460);
+                    $img->save(public_path('uploads/products/small/' . $imageName));
+
+                    $productImage = new ProductImage();
+                    $productImage->image = $imageName;
+                    $productImage->product_id = $product->id;
+                    $productImage->save();
+
+                    if ($key === 0) {
+                        $product->image = $imageName;
+                        $product->save();
+                    }
+                }
             }
 
             return response()->json([
@@ -104,11 +118,13 @@ class ProductController extends Controller
     public function show(string $id)
     {
         try {
-            $product = Product::with('product_images')->findOrFail($id);
+            $product = Product::with(['product_images', 'product_sizes'])->find($id);
+            $productSizes = $product->product_sizes->pluck('size_id');
 
             return response()->json([
                 'message' => 'Product fetched successfully.',
-                'data' => $product
+                'data' => $product,
+                'productSizes' => $productSizes
             ], 200);
         } catch (ModelNotFoundException $e) {
             return response()->json([
@@ -142,56 +158,14 @@ class ProductController extends Controller
             $data = $request->validated();
             $product->update($data);
 
-            // if (!empty($request->gallery)) {
-            //     if (!empty($product->image)) {
-            //         $oldLarge = public_path('uploads/products/large/' . $product->image);
-            //         $oldSmall = public_path('uploads/products/small/' . $product->image);
-
-            //         if (file_exists($oldLarge)) unlink($oldLarge);
-            //         if (file_exists($oldSmall)) unlink($oldSmall);
-            //     }
-
-            //     foreach ($request->gallery as $key => $tempImageId) {
-            //         $tempImage = TempImage::find($tempImageId);
-            //         if (!$tempImage) continue;
-
-            //         $extArray = explode('.', $tempImage->name);
-            //         $ext = end($extArray);
-            //         $imageName = $product->id . '_' . time() . '_' . $key . '.' . $ext;
-
-            //         // Large
-            //         $manager = new ImageManager(new Driver());
-            //         $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
-            //         $img->scaleDown(1200);
-            //         $img->save(public_path('uploads/products/large/' . $imageName));
-
-            //         // Small
-            //         $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
-            //         $img->coverDown(400, 460);
-            //         $img->save(public_path('uploads/products/small/' . $imageName));
-
-            //         $productImage = new ProductImage();
-            //         $productImage->image = $imageName;
-            //         $productImage->product_id = $product->id;
-            //         $productImage->save();
-
-            //         // Update main image if it is the first image
-            //         if ($key === 0) {
-            //             $product->image = $imageName;
-            //             $product->save();
-            //         }
-            //     }
-            // }
-
-            if (!empty($request->gallery)) {
-                if (!empty($product->image)) {
-                    $oldLarge = public_path('uploads/products/large/' . $product->image);
-                    $oldSmall = public_path('uploads/products/small/' . $product->image);
-                    if (file_exists($oldLarge)) unlink($oldLarge);
-                    if (file_exists($oldSmall)) unlink($oldSmall);
+            if (!empty($request->sizes)) {
+                ProductSize::where('product_id', $product->id)->delete();
+                foreach ($request->sizes as $sizeId) {
+                    $productSize = new ProductSize();
+                    $productSize->size_id = $sizeId;
+                    $productSize->product_id = $product->id;
+                    $productSize->save();
                 }
-
-                $this->handleProductImages($product, $request->gallery);
             }
 
             return response()->json([
@@ -240,37 +214,120 @@ class ProductController extends Controller
         }
     }
 
-    private function handleProductImages(Product $product, array $gallery): void
+    public function saveProductImage(Request $request)
     {
-        foreach ($gallery as $key => $tempImageId) {
-            $tempImage = TempImage::find($tempImageId);
-            if (!$tempImage) continue;
+        try {
+            $validator = Validator::make($request->all(), [
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif',
+                'product_id' => 'required|exists:products,id',
+            ]);
 
-            $ext = pathinfo($tempImage->name, PATHINFO_EXTENSION);
-            $imageName = $product->id . '_' . time() . '_' . $key . '.' . $ext;
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 400,
+                    'errors' => $validator->errors(),
+                ], 400);
+            }
+
+            $image = $request->file('image');
+            // thay thế time() bằng Str::uuid() để đảm bảo tên file là duy nhất tuyệt đối.
+            $imageName = $request->product_id . '-' . Str::uuid() . '.' . $image->extension();
+            $imagePath = public_path('uploads/temp/' . $imageName);
+            $image->move(public_path('uploads/temp/'), $imageName);
 
             $manager = new ImageManager(new Driver());
 
             // Large thumbnail
-            $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
+            $img = $manager->read($imagePath);
             $img->scaleDown(1200);
             $img->save(public_path('uploads/products/large/' . $imageName));
 
             // Small thumbnail
-            $img = $manager->read(public_path('uploads/temp/' . $tempImage->name));
-            $img->coverDown(420, 600);
+            $img = $manager->read($imagePath);
+            $img->coverDown(400, 460);
             $img->save(public_path('uploads/products/small/' . $imageName));
 
-            // Save to DB
-            ProductImage::create([
-                'image' => $imageName,
-                'product_id' => $product->id,
+            // insert a record in product_images table
+            $productImage = new ProductImage();
+            $productImage->image = $imageName;
+            $productImage->product_id = $request->product_id;
+            $productImage->save();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Temp image uploaded successfully.',
+                'data' => $productImage
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Error while creating temp image: ' . $e->getMessage());
+
+            return response()->json([
+                'status' => 500,
+                'message' => 'An error occurred while uploading the product image.',
+            ], 500);
+        }
+    }
+
+    public function updateDefaultImage(Request $request)
+    {
+        try {
+            $product = Product::find($request->product_id);
+            $product->image = $request->image;
+            $product->save();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Product default image changed successfully.',
+                'data' => $product
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Error while creating temp image: ' . $e->getMessage());
+
+            return response()->json([
+                'status' => 500,
+                'message' => 'An error occurred while uploading the product image.',
+            ], 500);
+        }
+    }
+
+    function deleteProductImage($id)
+    {
+        try {
+            $productImage = ProductImage::findOrFail($id);
+
+            $largePath = public_path('uploads/products/large/' . $productImage->image);
+            $smallPath = public_path('uploads/products/small/' . $productImage->image);
+
+            if (File::exists($largePath)) {
+                File::delete($largePath);
+            }
+
+            if (File::exists($smallPath)) {
+                File::delete($smallPath);
+            }
+
+            $productImage->delete();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Product image deleted successfully.',
+            ]);
+        } catch (ModelNotFoundException | NotFoundHttpException $e) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Product image not found.',
+            ], 404);
+        } catch (\Exception $e) {
+            Log::error('Error deleting product image', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'image_id' => $id,
             ]);
 
-            if ($key === 0) {
-                $product->image = $imageName;
-                $product->save();
-            }
+            return response()->json([
+                'status' => 500,
+                'message' => 'An unexpected error occurred while deleting the product image. Please try again later.',
+            ], 500);
         }
     }
 }
