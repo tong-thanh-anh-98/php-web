@@ -1,7 +1,7 @@
 import Layout from './common/Layout';
 import { Link, useSearchParams } from "react-router-dom";
 import { apiUrl } from './common/http';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import Loader from './common/Loader';
 import Notate from './Notate';
@@ -71,7 +71,7 @@ const Shop = () => {
         }
     };
 
-    const fetchProducts = async () => {
+    const fetchProducts = useCallback(async () => { // wrap fetchProducts with useCallback
         setLoader(true);
         try {
             let search = [];
@@ -112,7 +112,7 @@ const Shop = () => {
         } finally {
             setLoader(false);
         }
-    };
+    }, [categoryChecked, brandChecked, setSearchParams]);
 
     const handCategory = async (e) => {
         const { checked, value } = e.target;
@@ -138,7 +138,8 @@ const Shop = () => {
         fetchCategories();
         fetchBrands();
         fetchProducts();
-    }, [categoryChecked, brandChecked]);
+    }, [fetchProducts]); // replace [categoryChecked, brandChecked] with fetchProducts
+
 
     return (
         <Layout>
@@ -161,10 +162,12 @@ const Shop = () => {
                                                 <li className="mb-2" key={`category-${category.id}`}>
                                                     <input
                                                         checked={searchPrams.get('category') ? searchPrams.get('category').includes(category.id) : false}
+                                                        // checked={categoryChecked.includes(category.id)} // Use categoryChecked.includes(id) instead of parsing from searchParams
                                                         type="checkbox"
                                                         value={category.id}
                                                         id={`category-${category.id}`}
-                                                        onClick={handCategory}
+                                                        // onClick={handCategory}
+                                                        onChange={handCategory} // Use onChange instead of onClick
                                                     />
                                                     <label htmlFor={`category-${category.id}`} className="ps-2">{category.name}</label>
                                                 </li>
@@ -185,10 +188,12 @@ const Shop = () => {
                                                 <li className="mb-2" key={`brand-${brand.id}`}>
                                                     <input
                                                         checked={searchPrams.get('brand') ? searchPrams.get('brand').includes(brand.id) : false}
+                                                        // checked={brandChecked.includes(brand.id)} //Use categoryChecked.includes(id) instead of parsing from searchParams
                                                         type="checkbox"
                                                         value={brand.id}
                                                         id={`brand-${brand.id}`}
-                                                        onClick={handBrand}
+                                                        // onClick={handBrand}
+                                                        onChange={handBrand} // Use onChange instead of onClick
                                                     />
                                                     <label htmlFor={`brand-${brand.id}`} className="ps-2">{brand.name}</label>
                                                 </li>
