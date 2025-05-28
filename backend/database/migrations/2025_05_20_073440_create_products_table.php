@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->decimal('price', 10, 2);
-            $table->decimal('compare_price', 10, 2)->nullable();
+            // $table->decimal('price', 10, 2);
+            // $table->decimal('compare_price', 10, 2)->nullable(); // Chỉ dùng nếu cần xử lý phần lẻ (như thanh toán thẻ quốc tế).
+            $table->unsignedBigInteger('price'); // Và phù hợp với đặc thù tiền tệ VN.
+            $table->unsignedBigInteger('compare_price')->nullable();
             $table->text('description')->nullable();
             $table->text('short_description')->nullable();
             $table->string('image')->nullable();
@@ -25,7 +27,7 @@ return new class extends Migration
             $table->string('sku');
             $table->string('barcode')->nullable();
             $table->integer('status')->default(1);
-            $table->enum('is_featured', ['yes','no'])->default('no');
+            $table->enum('is_featured', ['yes', 'no'])->default('no');
             $table->timestamps();
             $table->softDeletes();
         });

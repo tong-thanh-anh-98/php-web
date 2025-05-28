@@ -316,7 +316,10 @@ const Create = ({ placeholder }) => {
                                             <div className='mb-3'>
                                                 <label htmlFor='' className='form-label'>Discounted Price</label>
                                                 <input
-                                                    {...register('compare_price')}
+                                                    // {...register('compare_price')}
+                                                    {...register('compare_price', {
+                                                        setValueAs: v => v === '' ? null : v
+                                                    })} // tránh lưu giá trị === 0 khi k nhập gì.
                                                     type='text'
                                                     className='form-control'
                                                     placeholder='Enter discounted Price' />

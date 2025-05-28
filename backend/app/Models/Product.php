@@ -34,14 +34,14 @@ class Product extends Model
     public function price(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => number_format($value, 0, ',', '.') . ' ₫',
+            get: fn($value) => number_format($value, 0, ',', '.') . '₫',
         );
     }
 
     public function comparePrice(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => number_format($value, 0, ',', '.') . ' ₫',
+            get: fn($value) => number_format($value, 0, ',', '.') . '₫',
         );
     }
 

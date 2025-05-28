@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import ProductImg from '../../assets/images/mens/seven.jpg';
+import ProductImg from '../../assets/images/mens/eight.jpg';
+import { Link } from 'react-router-dom';
 import { adminToken, apiUrl } from './http';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const FeaturedProducts = () => {
-
+const LatestProducts = () => {
     const [products, setProducts] = useState([]);
 
-    const fetchFeaturedProducts = async () => {
+    const fetchLatestProducts = async () => {
         try {
-            const response = await fetch(`${apiUrl}/front/get-featured-products`, {
+            const response = await fetch(`${apiUrl}/front/get-latest-products`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ const FeaturedProducts = () => {
             if (result.status === 200) {
                 setProducts(result.data);
             } else {
-                toast.error(result.message || 'Failed to fetch Featured products. Please try again.');
+                toast.error(result.message || 'Failed to fetch latest products. Please try again.');
             }
         } catch (err) {
             console.error('Fetch error:', err);
@@ -36,13 +36,14 @@ const FeaturedProducts = () => {
     }
 
     useEffect(() => {
-        fetchFeaturedProducts()
+        fetchLatestProducts()
     }, []);
 
+
     return (
-        <section className='section-2 py-5'>
+        <section className='section-2 pt-5'>
             <div className='container'>
-                <h2>Featured Products</h2>
+                <h2>New Products</h2>
                 <div className='row mt-4'>
                     {
                         products && products.map(product => {
@@ -75,4 +76,4 @@ const FeaturedProducts = () => {
     )
 }
 
-export default FeaturedProducts
+export default LatestProducts
