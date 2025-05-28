@@ -32,8 +32,6 @@ const Login = () => {
     //     });
     // }
     const onSubmit = async (data) => {
-        console.log(data);
-
         fetch(`${apiUrl}/admin/login`, {
             method: 'POST',
             headers: {
@@ -43,8 +41,6 @@ const Login = () => {
         })
             .then(res => res.json())
             .then(result => {
-                console.log(result);
-
                 if (result.status === 200) {
                     const adminInfo = {
                         token: result.token,
@@ -75,9 +71,6 @@ const Login = () => {
                             <div className='mb-3'>
                                 <label htmlFor='' className='form-label'>Email</label>
                                 <input
-                                    // {...register("email",
-                                    //     { required: "The email field is required." }
-                                    // )}
                                     {
                                     ...register('email', {
                                         required: "The email field is required",

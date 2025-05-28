@@ -79,7 +79,7 @@ const Show = () => {
     //     }
     // }
     const deleteCategory = async (id) => {
-        if (window.confirm("Are you sure you want to delete this category?")) {
+        if (confirm("Are you sure you want to delete this category?")) {
             try {
                 const res = await fetch(`${apiUrl}/categories/${id}`, {
                     method: 'DELETE',

@@ -182,11 +182,8 @@ const Create = ({ placeholder }) => {
             }
 
             const result = await res.json();
-            console.log(result);
-
             const newGallery = [...gallery, result.data.id];
             setGallery(newGallery);
-
             const newGalleryImage = [...galleryImages, result.data.image_url];
             setGalleryImages(newGalleryImage);
         } catch (error) {

@@ -77,7 +77,7 @@ const Show = () => {
     //     }
     // }
     const deleteBrand = async (id) => {
-        if (window.confirm("Are you sure you want to delete?")) {
+        if (confirm("Are you sure you want to delete?")) {
             try {
                 const response = await fetch(`${apiUrl}/brands/${id}`, {
                     method: 'DELETE',

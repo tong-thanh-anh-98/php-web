@@ -26,7 +26,6 @@ const Show = () => {
                 }
             });
             const result = await res.json();
-            // console.log(result);
             if (result.status === 200) {
                 setProducts(result.data);
             } else {
@@ -42,7 +41,7 @@ const Show = () => {
     };
 
     const deleteProduct = async (id) => {
-        if (window.confirm("Are you sure you want to delete this category?")) {
+        if (confirm("Are you sure you want to delete this category?")) {
             try {
                 const res = await fetch(`${apiUrl}/products/${id}`, {
                     method: 'DELETE',
@@ -54,7 +53,8 @@ const Show = () => {
                 });
                 const result = await res.json();
                 if (result.status === 200) {
-                    setProducts(products.filter(product => product.id !== id));
+                    const newProduct = products.filter(product => product.id !== id);
+                    setProducts(newProduct);
                     toast.success(result.message || 'product deleted successfully.');
                 } else {
                     toast.error(result.message || 'Failed to delete product.');

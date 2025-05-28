@@ -214,7 +214,7 @@ const Edit = ({ placeholder }) => {
     }
 
     const deleteImage = async (id) => {
-        if (window.confirm("Are you sure you want to delete product image?")) {
+        if (confirm("Are you sure you want to delete product image?")) {
             try {
                 const res = await fetch(`${apiUrl}/delete-product-image/${id}`, {
                     method: 'DELETE',

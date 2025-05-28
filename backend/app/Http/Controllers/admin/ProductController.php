@@ -190,8 +190,25 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         try {
-            $product = Product::findOrFail($id);
+            $product = Product::with('product_images')->find($id);
 
+            if ($product->product_images) {
+                foreach ($product->product_images as $productImage) {
+                    $largePath = public_path('uploads/products/large/' . $productImage->image);
+                    $smallPath = public_path('uploads/products/small/' . $productImage->image);
+
+                    if (File::exists($largePath)) {
+                        File::delete($largePath);
+                    }
+
+                    if (File::exists($smallPath)) {
+                        File::delete($smallPath);
+                    }
+                }
+            }
+
+            $product->product_images()->delete();
+            $product->product_sizes()->delete();
             $product->delete();
 
             return response()->json([
