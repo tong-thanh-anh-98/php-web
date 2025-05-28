@@ -9,7 +9,7 @@ const LatestProducts = () => {
 
     const fetchLatestProducts = async () => {
         try {
-            const response = await fetch(`${apiUrl}/front/get-latest-products`, {
+            const response = await fetch(`${apiUrl}/get-latest-products`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

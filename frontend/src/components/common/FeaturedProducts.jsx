@@ -9,7 +9,7 @@ const FeaturedProducts = () => {
 
     const fetchFeaturedProducts = async () => {
         try {
-            const response = await fetch(`${apiUrl}/front/get-featured-products`, {
+            const response = await fetch(`${apiUrl}/get-featured-products`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
