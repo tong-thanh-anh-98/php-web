@@ -9,9 +9,10 @@ import 'swiper/css/thumbs';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { Rating } from 'react-simple-star-rating';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { apiUrlFront } from './common/http';
 import { toast } from 'react-toastify';
+import { CartContext } from './context/Cart';
 
 const Product = () => {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
@@ -20,6 +21,8 @@ const Product = () => {
     const [product, setProduct] = useState([]);
     const [productImages, setProductImages] = useState([]);
     const [productSizes, setProductSizes] = useState([]);
+    const [sizeSelected, setSizeSelected] = useState(null);
+    const { addToCart } = useContext(CartContext);
 
     const fetchProduct = async () => {
         try {
@@ -44,6 +47,20 @@ const Product = () => {
             toast.error('Unable to connect to the server. Please try again later.');
         }
     };
+
+    const handleAddToCart = () => {
+        if (productSizes.length > 0) {
+            if (sizeSelected === null) {
+                toast.error("please select a size");
+            } else {
+                addToCart(product, sizeSelected);
+                toast.success("Product successfully added to cart");
+            }
+        } else {
+            addToCart(product, null);
+            toast.success("Product successfully added to cart");
+        }
+    }
 
     useEffect(() => {
         fetchProduct();
@@ -84,9 +101,9 @@ const Product = () => {
                                     className="mySwiper mt-2"
                                 >
                                     {
-                                        productImages && productImages.map((product_image, index) => {
+                                        productImages && productImages.map(product_image => {
                                             return (
-                                                <SwiperSlide key={`thumb-${index}`}>
+                                                <SwiperSlide key={`image-sm-${product_image.id}`}>
                                                     <div className='content'>
                                                         <img
                                                             src={product_image.image_url}
@@ -115,9 +132,9 @@ const Product = () => {
                                     className="mySwiper2"
                                 >
                                     {
-                                        productImages && productImages.map((product_image, index) => {
+                                        productImages && productImages.map(product_image => {
                                             return (
-                                                <SwiperSlide key={`main-${index}`}>
+                                                <SwiperSlide key={`image-${product_image.id}`}>
                                                     <div className='content'>
                                                         <img
                                                             src={product_image.image_url}
@@ -162,7 +179,12 @@ const Product = () => {
                                         {
                                             productSizes && productSizes.map(product_size => {
                                                 return (
-                                                    <button className='btn btn-size ms-1' key={`size-${product_size.id}`}>{product_size.size.name}</button>
+                                                    <button
+                                                        onClick={() => setSizeSelected(product_size.size.name)}
+                                                        className={`btn btn-size me-2 ${sizeSelected === product_size.size.name ? 'activate' : ''}`}
+                                                        key={`p-size-${product_size.id}`}>
+                                                        {product_size.size.name}
+                                                    </button>
                                                 )
                                             })
                                         }
@@ -170,7 +192,11 @@ const Product = () => {
                                 </div>
 
                                 <div className='add-to-cart mt-4'>
-                                    <button className='btn btn-primary text-uppercase'><Link to='/cart'>Add To Cart</Link></button>
+                                    <button
+                                        onClick={() => handleAddToCart()}
+                                        className='btn btn-primary text-uppercase'>
+                                        Add To Cart
+                                    </button>
                                 </div>
 
                                 <hr />

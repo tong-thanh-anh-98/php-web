@@ -32,29 +32,29 @@ class Product extends Model
 
     protected $appends = ['image_url'];
 
-    public function price(): Attribute
-    {
-        return Attribute::make(
-            get: fn($value) => number_format($value, 0, ',', '.') . '₫',
-        );
-    }
+    // public function price(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn($value) => number_format($value, 0, ',', '.') . '₫',
+    //     );
+    // }
 
-    public function comparePrice(): Attribute
-    {
-        return Attribute::make(
-            get: fn($value) => number_format($value, 0, ',', '.') . '₫',
-        );
-    }
+    // public function comparePrice(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn($value) => number_format($value, 0, ',', '.') . '₫',
+    //     );
+    // }
 
-    public function toArray()
-    {
-        $array = parent::toArray();
+    // public function toArray()
+    // {
+    //     $array = parent::toArray();
 
-        $array['price'] = $this->price;
-        $array['compare_price'] = $this->compare_price;
+    //     $array['price'] = $this->price;
+    //     $array['compare_price'] = $this->compare_price;
 
-        return $array;
-    }
+    //     return $array;
+    // }
 
     public function category()
     {

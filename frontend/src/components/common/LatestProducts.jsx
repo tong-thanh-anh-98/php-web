@@ -1,6 +1,6 @@
 import ProductImg from '../../assets/images/mens/eight.jpg';
 import { Link } from 'react-router-dom';
-import { adminToken, apiUrlFront } from './http';
+import { apiUrlFront } from './http';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -14,7 +14,6 @@ const LatestProducts = () => {
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    'Authorization': `Bearer ${adminToken()}`
                 }
             });
 

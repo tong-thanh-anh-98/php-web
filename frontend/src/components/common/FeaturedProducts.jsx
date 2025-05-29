@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import ProductImg from '../../assets/images/mens/seven.jpg';
-import { adminToken, apiUrlFront } from './http';
+import { apiUrlFront } from './http';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 
@@ -15,7 +15,6 @@ const FeaturedProducts = () => {
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    'Authorization': `Bearer ${adminToken()}`
                 }
             });
 
