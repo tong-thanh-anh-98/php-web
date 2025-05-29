@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Size;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\ProductSize;
@@ -68,6 +69,11 @@ class Product extends Model
     public function product_sizes()
     {
         return $this->hasMany(ProductSize::class);
+    }
+
+    public function size()
+    {
+        return $this->belongsTo(Size::class);
     }
 
     public function product_images()

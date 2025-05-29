@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import ProductImg from '../../assets/images/mens/seven.jpg';
-import { adminToken, apiUrl } from './http';
+import { adminToken, apiUrlFront } from './http';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 const FeaturedProducts = () => {
 
@@ -9,7 +10,7 @@ const FeaturedProducts = () => {
 
     const fetchFeaturedProducts = async () => {
         try {
-            const response = await fetch(`${apiUrl}/get-featured-products`, {
+            const response = await fetch(`${apiUrlFront}/get-featured-products`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -50,12 +51,12 @@ const FeaturedProducts = () => {
                                 <div className='col-md-3 col-6' key={`product-${product.id}`}>
                                     <div className='product card border-0'>
                                         <div className='card-img'>
-                                            <a href="">
+                                            <Link to={`/product/${product.id}`}>
                                                 <img src={product.image_url} alt='' className='w-100' />
-                                            </a>
+                                            </Link>
                                         </div>
                                         <div className='card-body pt-3'>
-                                            <a href="">{product.title}</a>
+                                            <Link to={`/product/${product.id}`}>{product.title}</Link>
                                             <div className='price'>
                                                 {product.price} &nbsp;
 

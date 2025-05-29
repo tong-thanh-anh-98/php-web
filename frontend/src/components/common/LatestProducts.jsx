@@ -1,6 +1,6 @@
 import ProductImg from '../../assets/images/mens/eight.jpg';
 import { Link } from 'react-router-dom';
-import { adminToken, apiUrl } from './http';
+import { adminToken, apiUrlFront } from './http';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -9,7 +9,7 @@ const LatestProducts = () => {
 
     const fetchLatestProducts = async () => {
         try {
-            const response = await fetch(`${apiUrl}/get-latest-products`, {
+            const response = await fetch(`${apiUrlFront}/get-latest-products`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -51,12 +51,12 @@ const LatestProducts = () => {
                                 <div className='col-md-3 col-6' key={`product-${product.id}`}>
                                     <div className='product card border-0'>
                                         <div className='card-img'>
-                                            <a href="">
+                                            <Link to={`/product/${product.id}`}>
                                                 <img src={product.image_url} alt='' className='w-100' />
-                                            </a>
+                                            </Link>
                                         </div>
                                         <div className='card-body pt-3'>
-                                            <a href="">{product.title}</a>
+                                            <Link to={`/product/${product.id}`}>{product.title}</Link>
                                             <div className='price'>
                                                 {product.price} &nbsp;
 

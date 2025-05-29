@@ -1,13 +1,49 @@
+import { useEffect, useState } from 'react';
 import Logo from '../../assets/images/logo-1.svg';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { Link } from 'react-router-dom';
+import { apiUrlFront } from './http';
+import { toast } from 'react-toastify';
 
 const Header = () => {
+    const [categories, setCategories] = useState([]);
+
+    const fetchCategories = async () => {
+        try {
+            const response = await fetch(`${apiUrlFront}/get-categories`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+
+            if (result.status === 200) {
+                setCategories(result.data);
+            } else {
+                toast.error(result.message || 'Failed to fetch  Categories. Please try again.');
+            }
+        } catch (err) {
+            console.error('Fetch error:', err);
+            toast.error('Unable to connect to the server.');
+        }
+    }
+
+    useEffect(() => {
+        fetchCategories()
+    }, []);
+
     return (
         <header className='shadow'>
             <div className="bg-dark text-center py-3">
-                <span className="text-white">ĐỐI TÁC THƯƠNG MẠI ĐIỆN TỬ CỦA MỌI NHÀ</span>
+                <span className="text-white">E-COMMERCE PARTNER FOR EVERYONE</span>
             </div>
             <div className='container'>
                 <Navbar expand="lg" className="">
@@ -15,9 +51,13 @@ const Header = () => {
                     <Navbar.Toggle aria-controls="navbarScroll" />
                     <Navbar.Collapse id="navbarScroll">
                         <Nav className="ms-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
-                            <Nav.Link as={Link} to="/shop">Danh mục 1</Nav.Link>
-                            <Nav.Link as={Link} to="/shop">Danh mục 2</Nav.Link>
-                            <Nav.Link as={Link} to="/shop">Danh mục 3</Nav.Link>
+                            {
+                                categories && categories.map(category => {
+                                    return (
+                                        <Nav.Link href={`/shop?category=${category.id}`} key={`category-${category.id}`}>{category.name}</Nav.Link>
+                                    )
+                                })
+                            }
                         </Nav>
                         <div className='nav-right d-flex'>
                             <Link to='/admin/login' className='ms-3'>

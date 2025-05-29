@@ -1,6 +1,6 @@
 import Layout from './common/Layout';
 import { Link, useSearchParams } from "react-router-dom";
-import { apiUrl } from './common/http';
+import { apiUrlFront } from './common/http';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import Loader from './common/Loader';
@@ -29,7 +29,7 @@ const Shop = () => {
 
     const fetchCategories = async () => {
         try {
-            const res = await fetch(`${apiUrl}/get-categories`, {
+            const res = await fetch(`${apiUrlFront}/get-categories`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ const Shop = () => {
 
     const fetchBrands = async () => {
         try {
-            const res = await fetch(`${apiUrl}/get-brands`, {
+            const res = await fetch(`${apiUrlFront}/get-brands`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ const Shop = () => {
                 setSearchParams([]);
             }
 
-            const res = await fetch(`${apiUrl}/get-products?${params}`, {
+            const res = await fetch(`${apiUrlFront}/get-products?${params}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -215,12 +215,12 @@ const Shop = () => {
                                         <div className='col-md-4 col-6' key={`product-${product.id}`}>
                                             <div className='product card border-0'>
                                                 <div className='card-img'>
-                                                    <a href="">
+                                                    <Link to={`/product/${product.id}`}>
                                                         <img src={product.image_url} alt='' className='w-100' />
-                                                    </a>
+                                                    </Link>
                                                 </div>
                                                 <div className='card-body pt-3'>
-                                                    <a href="">{product.title}</a>
+                                                    <Link to={`/product/${product.id}`}>{product.title}</Link>
                                                     <div className='price'>
                                                         {product.price} &nbsp;
 

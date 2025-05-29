@@ -34,7 +34,7 @@ class HomeController extends Controller
             return response()->json([
                 'status' => 200,
                 'data'   => $products
-            ]);
+            ], 200);
         } catch (\Exception $e) {
             Log::error('Error in latestProducts: ' . $e->getMessage());
 
@@ -56,7 +56,7 @@ class HomeController extends Controller
             return response()->json([
                 'status' => 200,
                 'data'   => $products
-            ]);
+            ], 200);
         } catch (\Exception $e) {
             Log::error('Error in latestProducts: ' . $e->getMessage());
 
@@ -78,7 +78,7 @@ class HomeController extends Controller
             return response()->json([
                 'status' => 200,
                 'data'   => $products
-            ]);
+            ], 200);
         } catch (\Exception $e) {
             Log::error('Error in featuredProducts: ' . $e->getMessage());
 
@@ -99,7 +99,7 @@ class HomeController extends Controller
             return response()->json([
                 'status' => 200,
                 'data'   => $categories
-            ]);
+            ], 200);
         } catch (\Exception $e) {
             Log::error('Error in getCategories: ' . $e->getMessage());
 
@@ -120,13 +120,41 @@ class HomeController extends Controller
             return response()->json([
                 'status' => 200,
                 'data'   => $brands
-            ]);
+            ], 200);
         } catch (\Exception $e) {
             Log::error('Error in getCategories: ' . $e->getMessage());
 
             return response()->json([
                 'status'  => 500,
                 'message' => 'Unable to retrieve categories. Please try again later.'
+            ], 500);
+        }
+    }
+
+    public function getProduct($id)
+    {
+        try {
+            $product = Product::with('product_images', 'product_sizes.size')->find($id);
+
+            if ($product === null) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Product not found.'
+                ], 404);
+            }
+
+            // $product->description = strip_tags($product->description);
+
+            return response()->json([
+                'status' => 200,
+                'data' => $product
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Error in getProduct: ' . $e->getMessage());
+
+            return response()->json([
+                'status' => 500,
+                'message' => 'Unable to retrieve product. Please try again later.'
             ], 500);
         }
     }
