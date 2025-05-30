@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import Layout from "./common/Layout";
-import ProductImg from "../assets/images/mens/six.jpg";
+import ProductImg from "../assets/images/products/six.jpg";
 import { useState } from 'react';
 
 const Checkout = () => {

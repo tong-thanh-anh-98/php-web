@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import ProductImg from '../../assets/images/mens/seven.jpg';
 import { apiUrlFront } from './http';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';

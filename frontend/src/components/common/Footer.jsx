@@ -1,35 +1,79 @@
+import { Link } from 'react-router-dom';
 import LogoFooter from '../../assets/images/logo-1.svg';
+import { useEffect, useState } from 'react';
+import { apiUrlFront } from './http';
+import { toast } from 'react-toastify';
 
 const Footer = () => {
+    const [categories, setCategories] = useState([]);
+
+    const fetchCategories = async () => {
+        try {
+            const response = await fetch(`${apiUrlFront}/get-categories`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+
+            if (result.status === 200) {
+                setCategories(result.data);
+            } else {
+                toast.error(result.message || 'Failed to fetch  Categories. Please try again.');
+            }
+        } catch (err) {
+            console.error('Fetch error:', err);
+            toast.error('Unable to connect to the server.');
+        }
+    }
+
+    useEffect(() => {
+        fetchCategories()
+    }, []);
+
     return (
         <footer className='py-5 text-white'>
             <div className='container'>
                 <div className='row'>
                     <div className='col-md-3 pb-4'>
-                        <img src={LogoFooter} alt="" width={150} />
-                        <div className='pt-3 pe-5'>Giới thiệu về cửa hàng.</div>
+                        {/* <img src={LogoFooter} alt="" width={150} /> */}
+                        <h2 className='mb-3'>ABOUT US</h2>
+                        <div className='pt-3 pe-5'>
+                            <p>
+                                We offer modern, high-quality fashion designs tailored for a dynamic and refined lifestyle. Discover new collections every week and define your own style with us.
+                                <br />
+                                Be Confident, Be Yourself.
+                            </p>
+                        </div>
                     </div>
 
                     <div className='col-md-3 pb-4'>
-                        <h2 className='mb-3'>DANH MỤC SẢN PHẨM</h2>
+                        <h2 className='mb-3'>CATEGORY PRODUCTS</h2>
                         <ul>
-                            <li>
-                                <a href=''>Danh mục 1</a>
-                            </li>
-                            <li>
-                                <a href=''>Danh mục 2</a>
-                            </li>
-                            <li>
-                                <a href=''>Danh mục 3</a>
-                            </li>
+                            {
+                                categories && categories.map(category => {
+                                    return (
+                                        <li>
+                                            <Link to={`/shop?category=${category.id}`} key={`category-${category.id}`}>{category.name}</Link>
+                                        </li>
+                                    )
+                                })
+                            }
                         </ul>
                     </div>
 
                     <div className='col-md-3 pb-4'>
-                        <h2 className='mb-3'>LIÊN KẾT</h2>
+                        <h2 className='mb-3'>SERVICE</h2>
                         <ul>
                             <li>
-                                <a href=''>Login</a>
+                                <Link to='/admin/login'>Login</Link>
                             </li>
                             <li>
                                 <a href=''>Register</a>
@@ -38,7 +82,7 @@ const Footer = () => {
                     </div>
 
                     <div className='col-md-3 pb-4'>
-                        <h2 className='mb-3'>LIÊN HỆ</h2>
+                        <h2 className='mb-3'>CONTACT</h2>
                         <ul>
                             <li>
                                 <a href=''>0987.457.830</a>
@@ -55,7 +99,7 @@ const Footer = () => {
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-truck" viewBox="0 0 16 16">
                                 <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456M12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2"></path>
                             </svg>
-                            <h3 className='ps-2'>Giao hàng miễn phí</h3>
+                            <h3 className='ps-2'>Free shipping.</h3>
                         </div>
                     </div>
 
@@ -65,7 +109,7 @@ const Footer = () => {
                                 <path d="M8 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4"></path>
                                 <path d="M0 4a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm3 0a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2V6a2 2 0 0 1-2-2z"></path>
                             </svg>
-                            <h3 className='ps-2'>Hoàn tiền theo tiêu chuẩn</h3>
+                            <h3 className='ps-2'>Always ensure product quality.</h3>
                         </div>
                     </div>
 
@@ -75,14 +119,14 @@ const Footer = () => {
                                 <path d="M11 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5z"></path>
                                 <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm13 2v5H1V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1m-1 9H2a1 1 0 0 1-1-1v-1h14v1a1 1 0 0 1-1 1"></path>
                             </svg>
-                            <h3 className='ps-2'>Thanh toán an toàn</h3>
+                            <h3 className='ps-2'>Convenient and flexible payment.</h3>
                         </div>
                     </div>
                 </div>
 
                 <div className='row'>
                     <div className='col-md-12 text-center pt-5'>
-                        <p> &copy; Website được phát triển năm 2025.</p>
+                        <p> &copy; Website developed in 2025. Copyright by tta@98</p>
                     </div>
                 </div>
             </div>

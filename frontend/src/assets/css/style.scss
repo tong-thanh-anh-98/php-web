@@ -110,8 +110,25 @@ ul {
     }
 }
 
+// header {
+//     .nav-expand-lg {
+//         .navbar-nav {
+//             .nav-link {
+//                 padding: 10px 15px;
+//                 font-size: 1.2em;
+//                 font-weight: 500;
+//                 color: $primary-black;
+
+//                 &:hover {
+//                     color: $primary-color;
+//                 }
+//             }
+//         }
+//     }
+// }
+
 header {
-    .nav-expand-lg {
+    .navbar-expand-lg {
         .navbar-nav {
             .nav-link {
                 padding: 10px 15px;
@@ -228,6 +245,7 @@ footer {
 
 .cart-bucket {
     position: relative;
+
     span {
         position: absolute;
         background-color: #F97316;
@@ -275,8 +293,8 @@ footer {
 }
 
 .custom-toast-body {
-  font-size: 16px;
-  padding: 10px 20px;
+    font-size: 16px;
+    padding: 10px 20px;
 }
 
 @media (min-width: 200px) and (max-width: 768px) {

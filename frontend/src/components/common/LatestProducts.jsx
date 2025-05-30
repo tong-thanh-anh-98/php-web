@@ -1,4 +1,3 @@
-import ProductImg from '../../assets/images/mens/eight.jpg';
 import { Link } from 'react-router-dom';
 import { apiUrlFront } from './http';
 import { useEffect, useState } from 'react';

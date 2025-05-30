@@ -32,7 +32,7 @@ const Login = () => {
     //     });
     // }
     const onSubmit = async (data) => {
-        fetch(`${apiUrl}/admin/login`, {
+        fetch(`${apiUrl}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

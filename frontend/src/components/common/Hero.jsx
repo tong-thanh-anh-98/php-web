@@ -3,9 +3,9 @@ import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
-import SliderOneImg from '../../assets/images/img_color1.jpg';
-import SliderTwoImg from '../../assets/images/img_color2.jpg';
-import SliderThreeImg from '../../assets/images/img_color.jpg';
+import SliderOneImg from '../../assets/images/banner/banner-4.jpg';
+import SliderTwoImg from '../../assets/images/banner/banner-3.jpg';
+import SliderThreeImg from '../../assets/images/banner/banner-2.jpg';
 
 const Hero = () => {
     return (

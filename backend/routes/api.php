@@ -1,13 +1,14 @@
 <?php
 
-use App\Http\Controllers\admin\TempImageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\AuthController;
-use App\Http\Controllers\admin\BrandController;
-use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\SizeController;
-use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\front\HomeController;
+use App\Http\Controllers\admin\BrandController;
+use App\Http\Controllers\admin\ProductController;
+use App\Http\Controllers\admin\CategoryController;
+use App\Http\Controllers\admin\DashboardController;
+use App\Http\Controllers\admin\TempImageController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -46,6 +47,7 @@ Route::prefix('admin')->group(function () {
     Route::post('login', [AuthController::class, 'authenticate']);
 
     Route::middleware('auth:sanctum')->group(function () {
+        Route::get('dashboard', [DashboardController::class, 'stats']);
         Route::apiResource('categories', CategoryController::class);
         Route::apiResource('brands', BrandController::class);
         Route::get('sizes', [SizeController::class, 'index']);

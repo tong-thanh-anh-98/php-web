@@ -16,7 +16,7 @@ export const AdminAuthProvider = ({ children }) => {
     const logout = () => {
         localStorage.removeItem('adminInfo');
         setUser(null);
-        toast.success('Bạn đã đăng xuất thành công.');
+        toast.success('You have successfully logged out of your account.');
     }
 
     return <AdminAuthContext.Provider value={{ user, login, logout }}>
