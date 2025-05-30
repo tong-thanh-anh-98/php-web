@@ -6,13 +6,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/css/style.scss';
 import { AdminAuthProvider } from './components/context/AdminAuth.jsx';
 import { CartProvider } from './components/context/Cart.jsx';
+import { UserAuthProvider } from './components/context/UserAuth.jsx';
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <AdminAuthProvider>
-      <CartProvider>
-        <App />
-      </CartProvider>
-    </AdminAuthProvider>
-  </StrictMode>,
+    <StrictMode>
+        <AdminAuthProvider>
+            <UserAuthProvider>
+                <CartProvider>
+                    <App />
+                </CartProvider>
+            </UserAuthProvider>
+        </AdminAuthProvider>
+    </StrictMode>,
 )

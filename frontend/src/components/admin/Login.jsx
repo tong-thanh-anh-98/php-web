@@ -10,55 +10,72 @@ import { useContext } from "react";
 
 const Login = () => {
     const { login } = useContext(AdminAuthContext);
-
     const { register, handleSubmit, formState: { errors } } = useForm();
-
     const navigate = useNavigate();
 
     // const onSubmit = async (data) => {
-    //     console.log(data);
+    //     fetch(`${apiUrl}/login`, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify(data)
+    //     })
+    //         .then(res => res.json())
+    //         .then(result => {
+    //             if (result.status === 200) {
+    //                 const adminInfo = {
+    //                     token: result.token,
+    //                     id: result.id,
+    //                     name: result.name
+    //                 }
 
-    //     const res = fetch(`${apiUrl}/admin/login`, 
-    //         {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-type' : 'application/json'
-    //             },
-    //             body: JSON.stringify(data)
-    //         }
-    //     ).then(res => res.json())
-    //     .then(result => {
-    //         console.log(result)
-    //     });
-    // }
+    //                 localStorage.setItem('adminInfo', JSON.stringify(adminInfo));
+    //                 login(adminInfo);
+    //                 toast.success(result.message);
+    //                 navigate('/admin/dashboard');
+    //             } else {
+    //                 toast.error(result.message);
+    //             }
+    //         })
+    //         .catch(error => {
+    //             console.error('Login failed:', error);
+    //         });
+    // };
+
     const onSubmit = async (data) => {
-        fetch(`${apiUrl}/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-            .then(res => res.json())
-            .then(result => {
-                if (result.status === 200) {
-                    const adminInfo = {
-                        token: result.token,
-                        id: result.id,
-                        name: result.name
-                    }
-
-                    localStorage.setItem('adminInfo', JSON.stringify(adminInfo));
-                    login(adminInfo);
-                    toast.success(result.message);
-                    navigate('/admin/dashboard');
-                } else {
-                    toast.error(result.message);
-                }
-            })
-            .catch(error => {
-                console.error('Login failed:', error);
+        try {
+            const response = await fetch(`${apiUrl}/login`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
             });
+
+            const result = await response.json();
+
+            if (response.ok && result.status === 200) {
+                const adminInfo = {
+                    id: result.id,
+                    name: result.name,
+                    token: result.token,
+                };
+
+                localStorage.setItem('adminInfo', JSON.stringify(adminInfo));
+                login(adminInfo);
+                toast.success(result.message || 'Login successful!');
+                navigate('/admin/dashboard');
+            } else {
+                // Handling errors returned from the server
+                toast.error(result.message || 'Login failed. Please check your credentials.');
+            }
+        } catch (error) {
+            // Troubleshooting due to network loss, system errors...
+            console.error('Login failed:', error);
+            toast.error('Something went wrong. Please try again later.');
+        }
     };
 
     return (
@@ -67,7 +84,8 @@ const Login = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className='card shadow border-0 login'>
                         <div className='card-body p-4'>
-                            <h3>Login</h3>
+                            <h3 className="text-center mb-3">Login</h3>
+
                             <div className='mb-3'>
                                 <label htmlFor='' className='form-label'>Email</label>
                                 <input
@@ -101,7 +119,7 @@ const Login = () => {
                                     errors.password && <p className='invalid-feedback'>{errors.password?.message}</p>
                                 }
                             </div>
-                            <button className='btn btn-secondary'>Login</button>
+                            <button className='btn btn-secondary w-100'>Login</button>
                         </div>
                     </div>
                 </form>

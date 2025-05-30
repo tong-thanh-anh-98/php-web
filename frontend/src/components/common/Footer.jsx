@@ -60,8 +60,8 @@ const Footer = () => {
                             {
                                 categories && categories.map(category => {
                                     return (
-                                        <li>
-                                            <Link to={`/shop?category=${category.id}`} key={`category-${category.id}`}>{category.name}</Link>
+                                        <li key={`category-${category.id}`}>
+                                            <Link to={`/shop?category=${category.id}`} >{category.name}</Link>
                                         </li>
                                     )
                                 })
@@ -73,10 +73,10 @@ const Footer = () => {
                         <h2 className='mb-3'>SERVICE</h2>
                         <ul>
                             <li>
-                                <Link to='/admin/login'>Login</Link>
+                                <Link to='/account/login'>Login</Link>
                             </li>
                             <li>
-                                <a href=''>Register</a>
+                                <Link to='/account/register'>Register</Link>
                             </li>
                         </ul>
                     </div>

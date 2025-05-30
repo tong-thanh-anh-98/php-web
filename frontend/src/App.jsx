@@ -8,108 +8,129 @@ import Login from './components/admin/Login';
 import { ToastContainer } from 'react-toastify';
 import Dashboard from './components/admin/Dashboard';
 import { AdminRequireAuth } from './components/admin/AdminRequireAuth';
+
 import { default as ShowCategories } from './components/admin/category/Show';
 import { default as CreateCategories } from './components/admin/category/Create';
 import { default as EditCategories } from './components/admin/category/Edit';
+
 import { default as ShowBrands } from './components/admin/brand/Show';
 import { default as CreateBrands } from './components/admin/brand/Create';
 import { default as EditBrands } from './components/admin/brand/Edit';
+
 import { default as ShowProducts } from './components/admin/product/Show';
 import { default as CreateProducts } from './components/admin/product/Create';
 import { default as EditProducts } from './components/admin/product/Edit';
 
+import Register from './components/Register';
+import { default as UserLogin } from './components/Login';
+import Profile from './components/Profile';
+import { UserRequireAuth } from './components/UserRequireAuth';
+
 function App() {
-  return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/product/:id" element={<Product />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
+    return (
+        <>
+            <BrowserRouter>
+                <Routes>
+                    {/* User Routers */}
+                    <Route path="/account/register" element={<Register />} />
+                    <Route path="/account/login" element={<UserLogin />} />
 
-          <Route path="/admin/login" element={<Login />} />
-          <Route path="/admin/dashboard" element={
-            <AdminRequireAuth>
-              <Dashboard />
-            </AdminRequireAuth>
-          } />
+                    <Route path="/account" element={
+                        <UserRequireAuth>
+                            <Profile />
+                        </UserRequireAuth>
+                    } />
 
-          <Route path="/admin/categories" element={
-            <AdminRequireAuth>
-              <ShowCategories />
-            </AdminRequireAuth>
-          } />
 
-          <Route path="/admin/categories/create" element={
-            <AdminRequireAuth>
-              <CreateCategories />
-            </AdminRequireAuth>
-          } />
 
-          <Route path="/admin/categories/edit/:id" element={
-            <AdminRequireAuth>
-              <EditCategories />
-            </AdminRequireAuth>
-          } />
+                    <Route path="/" element={<Home />} />
+                    <Route path="/shop" element={<Shop />} />
+                    <Route path="/product/:id" element={<Product />} />
+                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/checkout" element={<Checkout />} />
 
-          <Route path="/admin/brands" element={
-            <AdminRequireAuth>
-              <ShowBrands />
-            </AdminRequireAuth>
-          } />
+                    {/* Admin Routers */}
+                    <Route path="/admin/login" element={<Login />} />
 
-          <Route path="/admin/brands/create" element={
-            <AdminRequireAuth>
-              <CreateBrands />
-            </AdminRequireAuth>
-          } />
+                    <Route path="/admin/dashboard" element={
+                        <AdminRequireAuth>
+                            <Dashboard />
+                        </AdminRequireAuth>
+                    } />
 
-          <Route path="/admin/brands/edit/:id" element={
-            <AdminRequireAuth>
-              <EditBrands />
-            </AdminRequireAuth>
-          } />
+                    <Route path="/admin/categories" element={
+                        <AdminRequireAuth>
+                            <ShowCategories />
+                        </AdminRequireAuth>
+                    } />
 
-          <Route path="/admin/products" element={
-            <AdminRequireAuth>
-              <ShowProducts />
-            </AdminRequireAuth>
-          } />
+                    <Route path="/admin/categories/create" element={
+                        <AdminRequireAuth>
+                            <CreateCategories />
+                        </AdminRequireAuth>
+                    } />
 
-          <Route path="/admin/products/create" element={
-            <AdminRequireAuth>
-              <CreateProducts />
-            </AdminRequireAuth>
-          } />
+                    <Route path="/admin/categories/edit/:id" element={
+                        <AdminRequireAuth>
+                            <EditCategories />
+                        </AdminRequireAuth>
+                    } />
 
-          <Route path="/admin/products/edit/:id" element={
-            <AdminRequireAuth>
-              <EditProducts />
-            </AdminRequireAuth>
-          } />
+                    <Route path="/admin/brands" element={
+                        <AdminRequireAuth>
+                            <ShowBrands />
+                        </AdminRequireAuth>
+                    } />
 
-        </Routes>
-      </BrowserRouter>
+                    <Route path="/admin/brands/create" element={
+                        <AdminRequireAuth>
+                            <CreateBrands />
+                        </AdminRequireAuth>
+                    } />
 
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable={false}
-        pauseOnHover={false}
-        limit={1}
-        toastClassName="custom-toast"
-        bodyClassName="custom-toast-body"
-      />
+                    <Route path="/admin/brands/edit/:id" element={
+                        <AdminRequireAuth>
+                            <EditBrands />
+                        </AdminRequireAuth>
+                    } />
 
-    </>
-  )
+                    <Route path="/admin/products" element={
+                        <AdminRequireAuth>
+                            <ShowProducts />
+                        </AdminRequireAuth>
+                    } />
+
+                    <Route path="/admin/products/create" element={
+                        <AdminRequireAuth>
+                            <CreateProducts />
+                        </AdminRequireAuth>
+                    } />
+
+                    <Route path="/admin/products/edit/:id" element={
+                        <AdminRequireAuth>
+                            <EditProducts />
+                        </AdminRequireAuth>
+                    } />
+
+                </Routes>
+            </BrowserRouter>
+
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar
+                newestOnTop
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable={false}
+                pauseOnHover={false}
+                limit={1}
+                toastClassName="custom-toast"
+                bodyClassName="custom-toast-body"
+            />
+        </>
+    )
 }
 
 export default App

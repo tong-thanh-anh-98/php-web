@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\front\AccountController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\AuthController;
 use App\Http\Controllers\admin\SizeController;
@@ -30,6 +31,9 @@ Route::prefix('front')->group(function () {
     Route::get('get-categories', [HomeController::class, 'getCategories']);
     Route::get('get-brands', [HomeController::class, 'getBrands']);
     Route::get('get-product/{id}', [HomeController::class, 'getProduct']);
+
+    Route::post('register', [AccountController::class, 'register']);
+    Route::post('login', [AccountController::class, 'authenticate']);
 });
 
 
