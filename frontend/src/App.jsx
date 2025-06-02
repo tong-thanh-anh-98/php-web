@@ -41,13 +41,23 @@ function App() {
                         </UserRequireAuth>
                     } />
 
+                    <Route path="/cart" element={
+                        <UserRequireAuth>
+                            <Cart />
+                        </UserRequireAuth>
+                    } />
 
+                    <Route path="/checkout" element={
+                        <UserRequireAuth>
+                            <Checkout />
+                        </UserRequireAuth>
+                    } />
 
                     <Route path="/" element={<Home />} />
                     <Route path="/shop" element={<Shop />} />
                     <Route path="/product/:id" element={<Product />} />
-                    <Route path="/cart" element={<Cart />} />
-                    <Route path="/checkout" element={<Checkout />} />
+                    {/* <Route path="/cart" element={<Cart />} />
+                    <Route path="/checkout" element={<Checkout />} /> */}
 
                     {/* Admin Routers */}
                     <Route path="/admin/login" element={<Login />} />

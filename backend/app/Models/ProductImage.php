@@ -14,7 +14,7 @@ class ProductImage extends Model
     public function getImageUrlAttribute()
     {
         if ($this->image === "") {
-            return "";
+            return asset('/images/no_image.jpg');
         }
 
         return asset('/uploads/products/small/' . $this->image);
