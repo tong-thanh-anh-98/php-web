@@ -6,6 +6,7 @@ import { adminToken, apiUrl } from '../../common/http';
 import { toast } from 'react-toastify';
 import Layout from '../../common/Layout';
 import Sidebar from '../../common/Sidebar';
+import { parseCurrency } from '../../../utils/currency';
 
 const Edit = ({ placeholder }) => {
     const editor = useRef(null);
@@ -36,24 +37,30 @@ const Edit = ({ placeholder }) => {
 
     // Fetch product data to pre-fill form
     useEffect(() => {
-        fetch(`${apiUrl}/products/${params.id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${adminToken()}`
-            }
-        })
-            .then(res => res.json())
-            .then(result => {
+        const fetchProduct = async () => {
+            try {
+                const response = await fetch(`${apiUrl}/products/${params.id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': `Bearer ${adminToken()}`
+                    }
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message || 'Server error');
+                }
+
                 setProductImages(result.data.product_images);
-                // setSizesChecked(result.data.productSizes);
                 setSizesChecked(Array.isArray(result.productSizes) ? result.productSizes.map(id => +id) : []);
 
                 reset({
                     title: result.data.title,
-                    price: parseFloat((result.data.price).replace(/[^\d]/g, '')),
-                    compare_price: parseFloat((result.data.compare_price).replace(/[^\d]/g, '')),
+                    price: parseCurrency(result.data.price),
+                    compare_price: parseCurrency(result.data.compare_price),
                     description: result.data.description,
                     short_description: result.data.short_description,
                     category_id: result.data.category_id,
@@ -67,12 +74,13 @@ const Edit = ({ placeholder }) => {
                 });
 
                 setContent(result.data.description);
-
-            })
-            .catch(err => {
+            } catch (err) {
                 console.error('Fetch error:', err);
-                toast.error('Unable to connect to the server. Please try again later.');
-            });
+                toast.error('Product data cannot be taken. Please try again later.');
+            }
+        };
+
+        fetchProduct();
     }, [params.id, reset]);
 
     const updateProduct = async (data) => {
@@ -410,7 +418,7 @@ const Edit = ({ placeholder }) => {
                                                 <label htmlFor='' className='form-label'>Barcode</label>
                                                 <input
                                                     {...register('barcode')}
-                                                    type='number'
+                                                    type='text'
                                                     className='form-control'
                                                     placeholder='Enter Barcode' />
                                             </div>

@@ -348,7 +348,7 @@ const Create = ({ placeholder }) => {
                                                 <label htmlFor='' className='form-label'>Barcode</label>
                                                 <input
                                                     {...register('barcode')}
-                                                    type='number'
+                                                    type='text'
                                                     className='form-control'
                                                     placeholder='Enter Barcode' />
                                             </div>

@@ -110,7 +110,7 @@ const Show = () => {
                                                             <td>{product.id}</td>
                                                             <td>
                                                                 <img
-                                                                     src={product.image_url} 
+                                                                    src={product.image_url}
                                                                     alt={product.title}
                                                                     style={{ width: '65px', height: '65px' }}
                                                                 />

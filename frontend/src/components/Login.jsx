@@ -99,7 +99,7 @@ const Login = () => {
 
                                 {/* <button className='btn btn-secondary'>Register</button> */}
                                 <button disabled={disable} type="submit" className="btn btn-secondary w-100">
-                                    {disable ? 'Registering...' : 'Register'}
+                                    {disable ? 'Logging in...' : 'Login'}
                                 </button>
 
                                 <div className='d-flex justify-content-center pt-4 pb-2'>

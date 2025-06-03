@@ -100,7 +100,7 @@ const Product = () => {
                                     modules={[FreeMode, Navigation, Thumbs]}
                                     className="mySwiper mt-2"
                                 >
-                                    {
+                                    {/* {
                                         productImages && productImages.map(product_image => {
                                             return (
                                                 <SwiperSlide key={`image-sm-${product_image.id}`}>
@@ -114,6 +114,33 @@ const Product = () => {
                                                 </SwiperSlide>
                                             )
                                         })
+                                    } */}
+                                    {
+                                        productImages && productImages.length > 0 ? (
+                                            productImages.map(product_image => (
+                                                <SwiperSlide key={`image-sm-${product_image.id}`}>
+                                                    <div className='content'>
+                                                        <img
+                                                            src={product_image.image_url}
+                                                            alt=""
+                                                            height={100}
+                                                            className='w-100'
+                                                        />
+                                                    </div>
+                                                </SwiperSlide>
+                                            ))
+                                        ) : (
+                                            <SwiperSlide key="no-image">
+                                                <div className='content'>
+                                                    <img
+                                                        src="/images/no_image.png"
+                                                        alt="No image"
+                                                        height={100}
+                                                        className='w-100'
+                                                    />
+                                                </div>
+                                            </SwiperSlide>
+                                        )
                                     }
                                 </Swiper>
                             </div>
@@ -131,7 +158,7 @@ const Product = () => {
                                     modules={[FreeMode, Navigation, Thumbs]}
                                     className="mySwiper2"
                                 >
-                                    {
+                                    {/* {
                                         productImages && productImages.map(product_image => {
                                             return (
                                                 <SwiperSlide key={`image-${product_image.id}`}>
@@ -144,6 +171,31 @@ const Product = () => {
                                                 </SwiperSlide>
                                             )
                                         })
+                                    } */}
+                                    {
+                                        productImages && productImages.length > 0 ? (
+                                            productImages.map(product_image => (
+                                                <SwiperSlide key={`image-${product_image.id}`}>
+                                                    <div className='content'>
+                                                        <img
+                                                            src={product_image.image_url}
+                                                            alt=""
+                                                            className='w-100'
+                                                        />
+                                                    </div>
+                                                </SwiperSlide>
+                                            ))
+                                        ) : (
+                                            <SwiperSlide key="no-image-main">
+                                                <div className='content'>
+                                                    <img
+                                                        src="/images/no_image.png"
+                                                        alt="No image"
+                                                        className='w-100'
+                                                    />
+                                                </div>
+                                            </SwiperSlide>
+                                        )
                                     }
                                 </Swiper>
                             </div>
