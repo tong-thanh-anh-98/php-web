@@ -14,10 +14,8 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            // $table->decimal('price', 10, 2);
-            // $table->decimal('compare_price', 10, 2)->nullable(); // Chỉ dùng nếu cần xử lý phần lẻ (như thanh toán thẻ quốc tế).
-            $table->unsignedBigInteger('price'); // Và phù hợp với đặc thù tiền tệ VN.
-            $table->unsignedBigInteger('compare_price')->nullable();
+            $table->decimal('price', 15, 0);
+            $table->decimal('compare_price', 15, 0)->nullable();
             $table->text('description')->nullable();
             $table->text('short_description')->nullable();
             $table->string('image')->nullable();

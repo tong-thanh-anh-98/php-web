@@ -16,18 +16,21 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             SizeSeeder::class,
+            CategorySeeder::class,
+            BrandSeeder::class,
         ]);
-        // Tạo user admin
+
+        // Create admin
         User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
             'role' => 'admin'
         ]);
 
-        // Tạo user customer
+        // Create customer
         User::factory()->create([
-            'name' => 'Customer',
-            'email' => 'customer@gmail.com',
+            'name' => 'AnhTT',
+            'email' => 'att@gmail.com',
             'role' => 'customer',
         ]);
     }
