@@ -8,12 +8,6 @@ const Cart = () => {
     const { cartData, shipping, subTotal, grandTotal, updateCartItem, deleteCartItem } = useContext(CartContext);
     const [qty, setQty] = useState({});
 
-    // const handleQty = (e, itemId) => {
-    //     const neqQty = e.target.value;
-    //     setQty(prev => ({ ...prev, [itemId]: neqQty }));
-    //     updateCartItem(itemId, neqQty);
-    //     updateCartItem(itemId);
-    // }
     // in handleQty
     const handleQty = (e, itemId) => {
         const newQty = Number(e.target.value);
@@ -99,30 +93,29 @@ const Cart = () => {
 
                 {
                     cartData.length > 0 &&
-                        <div className="row justify-content-end">
-                            <div className="col-md-3">
-                                <div className="d-flex justify-content-between border-bottom pb-2">
-                                    <div>Subtotal</div>
-                                    {/* <div>{subTotal()}</div> */}
-                                    <div>{formatPrice(subTotal())}</div>
+                    <div className="row justify-content-end">
+                        <div className="col-md-3">
+                            <div className="d-flex justify-content-between border-bottom pb-2">
+                                <div>Subtotal</div>
+                                <div>{formatPrice(subTotal())}</div>
 
-                                </div>
+                            </div>
 
-                                <div className="d-flex justify-content-between border-bottom py-2">
-                                    <div>Shipping</div>
-                                    <div>{formatPrice(shipping())}</div>
-                                </div>
+                            <div className="d-flex justify-content-between border-bottom py-2">
+                                <div>Shipping</div>
+                                <div>{formatPrice(shipping())}</div>
+                            </div>
 
-                                <div className="d-flex justify-content-between border-bottom py-2">
-                                    <div><strong>Grand total</strong></div>
-                                    <div>{formatPrice(grandTotal())}</div>
-                                </div>
+                            <div className="d-flex justify-content-between border-bottom py-2">
+                                <div><strong>Grand total</strong></div>
+                                <div>{formatPrice(grandTotal())}</div>
+                            </div>
 
-                                <div className="d-flex justify-content-end py-3">
-                                    <button className="btn btn-primary"><Link to='/checkout'>Proceed To Checkout</Link></button>
-                                </div>
+                            <div className="d-flex justify-content-end py-3">
+                                <Link to='/checkout' className="btn btn-primary">Proceed To Checkout</Link>
                             </div>
                         </div>
+                    </div>
                 }
             </div>
         </Layout>

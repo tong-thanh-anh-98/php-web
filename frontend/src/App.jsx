@@ -25,6 +25,7 @@ import Register from './components/Register';
 import { default as UserLogin } from './components/Login';
 import Profile from './components/Profile';
 import { UserRequireAuth } from './components/UserRequireAuth';
+import Confirmation from './components/Confirmation';
 
 function App() {
     return (
@@ -34,6 +35,10 @@ function App() {
                     {/* User Routers */}
                     <Route path="/account/register" element={<Register />} />
                     <Route path="/account/login" element={<UserLogin />} />
+
+                    <Route path="/" element={<Home />} />
+                    <Route path="/shop" element={<Shop />} />
+                    <Route path="/product/:id" element={<Product />} />
 
                     <Route path="/account" element={
                         <UserRequireAuth>
@@ -53,11 +58,11 @@ function App() {
                         </UserRequireAuth>
                     } />
 
-                    <Route path="/" element={<Home />} />
-                    <Route path="/shop" element={<Shop />} />
-                    <Route path="/product/:id" element={<Product />} />
-                    {/* <Route path="/cart" element={<Cart />} />
-                    <Route path="/checkout" element={<Checkout />} /> */}
+                     <Route path="/order/confirmation/:id" element={
+                        <UserRequireAuth>
+                            <Confirmation />
+                        </UserRequireAuth>
+                    } />
 
                     {/* Admin Routers */}
                     <Route path="/admin/login" element={<Login />} />

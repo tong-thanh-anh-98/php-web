@@ -10,6 +10,10 @@
 * php artisan install:api
 * php artisan storage:link
 
+// middleware admin and user
+php artisan make:middleware CheckAdmin
+php artisan make:middleware CheckUser
+
 - Setup frontend:
 - Installing vite: npm create vite@latest -> enter frontend project name -> select React -> select Javascript.
 - cd frontend -> npm install -> npm run dev
@@ -51,3 +55,31 @@ Size: M – L – XL – XXL
 }
 
 token login: 2|uUm3FsZ73qAxCbpCp2laEFgPVgUTWO8noPbeYgHt198d111f
+barcode: 8934567800000
+
+test API save order: http://localhost:8000/api/frontend/save-order
+{
+  "name": "AnhTT",
+  "email": "att@gmail.com",
+  "city": "Ho Chi Minh City",
+  "state": "Go Vap",
+  "zip": "71400",
+  "address": "133 Quang Trung",
+  "mobile": "0987457830",
+  "grand_total": 100000,
+  "discount": 0,
+  "sub_total": 99000,
+  "shipping": 1000,
+  "payment_status": "not paid",
+  "status": "pending",
+  "cart": [
+    {
+      "product_id": 2,
+      "name": "Áo phong",
+      "qty": 1,
+      "price": 99000,
+      "unit": 99000,
+      "size": "M"
+    }
+  ]
+}

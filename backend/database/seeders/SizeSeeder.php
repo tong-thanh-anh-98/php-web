@@ -13,7 +13,7 @@ class SizeSeeder extends Seeder
      */
     public function run(): void
     {
-        $sizes = ['S', 'M', 'L', 'XL', 'XXL'];
+        $sizes = ['NO', 'S', 'M', 'L', 'XL', 'XXL'];
 
         foreach ($sizes as $size) {
             DB::table('sizes')->insert([
@@ -24,3 +24,4 @@ class SizeSeeder extends Seeder
         }
     }
 }
+

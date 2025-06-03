@@ -19,7 +19,52 @@ const Profile = () => {
                     <div className='col-md-9'>
                         <div className='card shadow'>
                             <div className='card-body p-4'>
+                                <h3 className="border-bottom pb-3">User Details</h3>
+                                <form action="">
+                                    <div className="row pt-3">
+                                        <div className="col-md-6">
+                                            <div className="mb-3">
+                                                <input type="text" className="form-control" placeholder="Name" />
+                                            </div>
+                                        </div>
 
+                                        <div className="col-md-6">
+                                            <div className="mb-3">
+                                                <input type="email" className="form-control" placeholder="Email" />
+                                            </div>
+                                        </div>
+
+                                        <div className="col-md-12">
+                                            <div className="mb-3">
+                                                <textarea className="form-control" rows={5} placeholder="Address"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div className="col-md-6">
+                                            <div className="mb-3">
+                                                <input type="text" className="form-control" placeholder="City" />
+                                            </div>
+                                        </div>
+
+                                        <div className="col-md-6">
+                                            <div className="mb-3">
+                                                <input type="text" className="form-control" placeholder="State" />
+                                            </div>
+                                        </div>
+
+                                        <div className="col-md-6">
+                                            <div className="mb-3">
+                                                <input type="text" className="form-control" placeholder="Zip Code" />
+                                            </div>
+                                        </div>
+
+                                        <div className="col-md-6">
+                                            <div className="mb-3">
+                                                <input type="text" className="form-control" placeholder="Phone Number" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
