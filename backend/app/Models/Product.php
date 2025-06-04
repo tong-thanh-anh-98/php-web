@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Size;
 use App\Models\Brand;
 use App\Models\Category;
+use App\HasCurrencyFormat;
 use App\Models\ProductSize;
 use App\Models\ProductImage;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Product extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasCurrencyFormat;
     protected $fillable = [
         'title',
         'price',
@@ -35,26 +36,18 @@ class Product extends Model
     public function price(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => number_format($value, 0, ',', '.') . ' ₫',
-            set: fn($value) => preg_replace('/[^0-9]/', '', $value) // if need to set currency format
+            get: fn($value) => $this->formatCurrency($value),
+            set: fn($value) => $this->parseCurrency($value),
         );
     }
 
     public function comparePrice(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => $value !== null ? number_format($value, 0, ',', '.') . ' ₫' : null,
-            set: fn($value) => $value !== null ? preg_replace('/[^0-9]/', '', $value) : null
+            get: fn($value) => $value !== null ? $this->formatCurrency($value) : null,
+            set: fn($value) => $value !== null ? $this->parseCurrency($value) : null,
         );
     }
-
-    // public function getImageUrlAttribute()
-    // {
-    //     if ($this->image === "") {
-    //         return "";
-    //     }
-    //     return asset('/uploads/products/small/' . $this->image);
-    // }
 
     /**
      * Image URL

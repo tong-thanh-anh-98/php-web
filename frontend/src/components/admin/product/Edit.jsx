@@ -241,7 +241,7 @@ const Edit = ({ placeholder }) => {
                     toast.error(result.message);
                 }
             } catch (error) {
-                console.error('Fetch sizes error:', error);
+                console.error('Fetch images error:', error);
                 toast.error('Unable to connect to the server. Please try again later.');
             }
         }

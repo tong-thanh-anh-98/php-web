@@ -6,6 +6,7 @@ use App\Models\order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,7 +14,7 @@ class OrderController extends Controller
 {
     public function saveOrder(Request $request)
     {
-        if (empty($request->cart)) {
+        if (empty($request->cart) || !is_array($request->cart)) {
             return response()->json([
                 'status' => 400,
                 'message' => 'Your cart is empty.'
@@ -23,15 +24,20 @@ class OrderController extends Controller
         DB::beginTransaction();
 
         try {
-            // Save order
+            // Cast to float if string format is present
+            $subTotal = (float) preg_replace('/[^\d.]/', '', $request->sub_total);
+            $grandTotal = (float) preg_replace('/[^\d.]/', '', $request->grand_total);
+            $shipping = (float) preg_replace('/[^\d.]/', '', $request->shipping);
+            $discount = $request->discount !== null ? (float) preg_replace('/[^\d.]/', '', $request->discount) : 0;
+
             $order = new Order();
             $order->user_id = Auth::id();
-            $order->sub_total = $request->sub_total;
-            $order->grand_total = $request->grand_total;
-            $order->shipping = $request->shipping;
-            $order->discount = $request->discount;
-            $order->payment_status = $request->payment_status;
-            $order->status = $request->status;
+            $order->sub_total = $subTotal;
+            $order->grand_total = $grandTotal;
+            $order->shipping = $shipping;
+            $order->discount = $discount;
+            $order->payment_status = $request->payment_status ?? 'not paid';
+            $order->status = $request->status ?? 'pending';
             $order->name = $request->name;
             $order->email = $request->email;
             $order->mobile = $request->mobile;
@@ -41,16 +47,15 @@ class OrderController extends Controller
             $order->zip = $request->zip;
             $order->save();
 
-            // Save order items
             foreach ($request->cart as $item) {
                 $orderItem = new OrderItem();
                 $orderItem->product_id = $item['product_id'];
                 $orderItem->order_id = $order->id;
-                $orderItem->name = $item['title'];
+                $orderItem->name = $item['name'];
                 $orderItem->size = $item['size'];
+                $orderItem->qty = $item['qty'];
                 $orderItem->price = $item['qty'] * $item['price'];
                 $orderItem->unit_price = $item['price'];
-                $orderItem->qty = $item['qty'];
                 $orderItem->save();
             }
 
@@ -63,6 +68,7 @@ class OrderController extends Controller
             ]);
         } catch (\Throwable $e) {
             DB::rollBack();
+            Log::error('Order Save Failed: ' . $e->getMessage());
 
             return response()->json([
                 'status' => 500,

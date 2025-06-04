@@ -34,9 +34,9 @@ const Checkout = () => {
         try {
             const newFormData = {
                 ...formData,
-                grand_total: grandTotal(),
-                sub_total: subTotal(),
-                shipping: shipping(),
+                grand_total: parseCurrency(grandTotal()),
+                sub_total: parseCurrency(subTotal()),
+                shipping: parseCurrency(shipping()),
                 discount: 0,
                 payment_status: paymentStatus,
                 status: 'pending',

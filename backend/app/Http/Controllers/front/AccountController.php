@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\front;
 
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -95,43 +96,34 @@ class AccountController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function getOrderDetails($id, Request $request)
     {
-        //
-    }
+        try {
+            $order = Order::where([
+                'user_id' => $request->user()->id,
+                'id' => $id
+            ])->with('items')
+                ->first();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+            if ($order === null) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Order not found',
+                    'data' => []
+                ], 404);
+            } else {
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'You have order.',
+                    'data' => $order
+                ], 200);
+            }
+        } catch (\Throwable $e) {
+            Log::error('Something went wrong:', ['error' => $e->getMessage()]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+            return response()->json([
+                'message' => 'An error occurred. Please check again.',
+            ], 500);
+        }
     }
 }
