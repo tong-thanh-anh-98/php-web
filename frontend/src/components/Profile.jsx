@@ -17,7 +17,7 @@ const Profile = () => {
                         <UserSidebar />
                     </div>
                     <div className='col-md-9'>
-                        <div className='card shadow'>
+                        <div className='card shadow mb-5'>
                             <div className='card-body p-4'>
                                 <h3 className="border-bottom pb-3">User Details</h3>
                                 <form action="">

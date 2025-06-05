@@ -33,6 +33,7 @@ Route::prefix('front')->group(function () {
     Route::middleware(['auth:sanctum', 'checkUserRole'])->group(function () {
         Route::post('save-order', [OrderController::class, 'saveOrder']);
         Route::get('get-order-details/{id}', [AccountController::class, 'getOrderDetails']);
+        Route::get('get-orders', [AccountController::class, 'getOrders']);
     });
 });
 

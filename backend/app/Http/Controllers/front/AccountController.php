@@ -102,10 +102,37 @@ class AccountController extends Controller
             $order = Order::where([
                 'user_id' => $request->user()->id,
                 'id' => $id
-            ])->with('items')
+            ])->with('items', 'items.product')
                 ->first();
 
             if ($order === null) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Order not found',
+                    'data' => []
+                ], 404);
+            } else {
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'You have order.',
+                    'data' => $order
+                ], 200);
+            }
+        } catch (\Throwable $e) {
+            Log::error('Something went wrong:', ['error' => $e->getMessage()]);
+
+            return response()->json([
+                'message' => 'An error occurred. Please check again.',
+            ], 500);
+        }
+    }
+
+    public function getOrders(Request $request)
+    {
+        try {
+            $order = Order::where('user_id', $request->user()->id)->get();
+
+            if (!$order) {
                 return response()->json([
                     'status' => 404,
                     'message' => 'Order not found',

@@ -12,7 +12,8 @@ const UserSidebar = () => {
                         <Link to='/account'>Account</Link>
                     </li>
                     <li>
-                        <a href='#'>Orders</a>
+                        <Link to='/account/orders'>Orders</Link>
+
                     </li>
                     <li>
                         <a href='#'>Change Password</a>
