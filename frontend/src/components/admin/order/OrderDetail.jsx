@@ -5,12 +5,19 @@ import { useCallback, useEffect, useState } from 'react';
 import { adminToken, apiUrl } from '../../common/http';
 import { toast } from 'react-toastify';
 import Loader from '../../common/Loader';
+import { useForm } from 'react-hook-form';
 
 const OrderDetail = () => {
     const [order, setOrder] = useState([]);
     const [items, setItems] = useState([]);
     const [loader, setLoader] = useState(true);
     const params = useParams();
+    const {
+        register,
+        handleSubmit,
+        // formState: { errors },
+        reset
+    } = useForm();
 
     const fetchOrder = useCallback(async () => {
         setLoader(true);
@@ -24,10 +31,14 @@ const OrderDetail = () => {
                 }
             });
             const result = await res.json();
-            console.log(result.data);
+            console.log(result);
             if (result.status === 200) {
                 setOrder(result.data);
                 setItems(result.data.items);
+                reset({
+                    status: result.data.status,
+                    payment_status: result.data.payment_status
+                });
             } else {
                 toast.error(result.message);
                 console.error('Fetch orders failed:', result);
@@ -38,7 +49,39 @@ const OrderDetail = () => {
         } finally {
             setLoader(false);
         }
-    }, [params.id]);
+    }, [params.id, reset]);
+
+    const updateOrder = async (data) => {
+        setLoader(true);
+        try {
+            const response = await fetch(`${apiUrl}/orders/${params.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${adminToken()}`
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            if (result.status === 200) {
+                setOrder(result.data);
+                reset({
+                    status: result.data.status,
+                    payment_status: result.data.payment_status
+                })
+                toast.success(result.message);
+            } else {
+                toast.error(result.message);
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+            toast.error('Unable to connect to the server.');
+        } finally {
+            setLoader(false);
+        }
+    };
 
     useEffect(() => {
         fetchOrder();
@@ -109,7 +152,7 @@ const OrderDetail = () => {
                                                     </div>
 
                                                     <div className="col-md-4">
-                                                        <div className="text-secondary py-3">Payment Status</div>
+                                                        <div className="text-secondary py-3">Payment Method</div>
                                                         {
                                                             order.payment_status === 'not paid' && <p>Cash on Delivery</p>
                                                         }
@@ -184,7 +227,33 @@ const OrderDetail = () => {
                             <div className="col-md-3">
                                 <div className='card shadow'>
                                     <div className='card-body p-4'>
-
+                                        <form onSubmit={handleSubmit(updateOrder)}>
+                                            <div className="mb-3">
+                                                <label className='form-label' htmlFor="status">Status</label>
+                                                <select
+                                                    {...register('status', { required: true })}
+                                                    className="form-select"
+                                                    id="status">
+                                                    <option value="pending">Pending</option>
+                                                    <option value="shipped">Shipped</option>
+                                                    <option value="delivered">Delivered</option>
+                                                    <option value="cancelled">Cancelled</option>
+                                                </select>
+                                            </div>
+                                            <div className="mb-3">
+                                                <label className='form-label' htmlFor="payment-status">Payment Status</label>
+                                                <select
+                                                    {...register('payment_status', { required: true })}
+                                                    className="form-select"
+                                                    id="payment-status">
+                                                    <option value="paid">Paid</option>
+                                                    <option value="not paid">Not Paid</option>
+                                                </select>
+                                            </div>
+                                            <button type='submit' className="btn btn-primary">
+                                                Update
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use Exception;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
@@ -89,9 +90,41 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            $order = Order::find($id);
+
+            if (!$order) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Order not found'
+                ], 404);
+            }
+
+            $order->status = $request->status;
+            $order->payment_status = $request->payment_status;
+            $order->save();
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Order update successfully.',
+                'data' => $order
+            ], 200);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error('Order Update Failed: ' . $e->getMessage());
+
+            return response()->json([
+                'status' => 500,
+                'message' => 'something went wrong.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

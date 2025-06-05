@@ -80,7 +80,7 @@ const Show = () => {
                                                 orders.map(order => {
                                                     return (
                                                         <tr
-                                                            key={order.id}
+                                                            key={`order-${order.id}`}
                                                             onClick={() => navigate(`/admin/orders/${order.id}`)}
                                                             style={{ cursor: 'pointer' }}
                                                         >
