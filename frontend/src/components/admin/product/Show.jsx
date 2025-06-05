@@ -86,7 +86,7 @@ const Show = () => {
                         <div className='card shadow'>
                             <div className='card-body p-4'>
                                 {isLoading && <Loader />}
-                                {noProducts && <Notate text="products not found." />}
+                                {noProducts && <Notate text="Products not found." />}
                                 {hasProducts &&
                                     <table className='table table-hover'>
                                         <thead>

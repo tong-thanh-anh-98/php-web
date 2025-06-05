@@ -48,7 +48,7 @@ const Profile = () => {
 
                                         <div className="col-md-6">
                                             <div className="mb-3">
-                                                <input type="text" className="form-control" placeholder="State" />
+                                                <input type="text" className="form-control" placeholder="District" />
                                             </div>
                                         </div>
 

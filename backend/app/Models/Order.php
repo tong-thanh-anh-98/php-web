@@ -24,7 +24,7 @@ class Order extends Model
         'mobile',
         'address',
         'city',
-        'state',
+        'district',
         'zip',
     ];
 

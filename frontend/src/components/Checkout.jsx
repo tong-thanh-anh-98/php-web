@@ -157,12 +157,12 @@ const Checkout = () => {
                                 <div className="col-md-6">
                                     <div className="mb-3">
                                         <input
-                                            {...register('state', { required: 'The state field is required' })}
+                                            {...register('district', { required: 'The district field is required' })}
                                             type='text'
-                                            className={`form-control ${errors.state && 'is-invalid'}`}
-                                            placeholder='Enter state' />
+                                            className={`form-control ${errors.district && 'is-invalid'}`}
+                                            placeholder='Enter district' />
                                         {
-                                            errors.state && <p className='invalid-feedback'>{errors.state?.message}</p>
+                                            errors.district && <p className='invalid-feedback'>{errors.district?.message}</p>
                                         }
                                     </div>
                                 </div>

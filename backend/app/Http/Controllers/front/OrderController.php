@@ -43,7 +43,7 @@ class OrderController extends Controller
             $order->mobile = $request->mobile;
             $order->address = $request->address;
             $order->city = $request->city;
-            $order->state = $request->state;
+            $order->district = $request->district;
             $order->zip = $request->zip;
             $order->save();
 
