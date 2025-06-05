@@ -10,6 +10,7 @@ use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\DashboardController;
+use App\Http\Controllers\admin\OrderController as AdminOrderController;
 use App\Http\Controllers\admin\TempImageController;
 
 // Route::get('/user', function (Request $request) {
@@ -44,9 +45,12 @@ Route::prefix('admin')->group(function () {
         Route::apiResource('brands', BrandController::class);
         Route::get('sizes', [SizeController::class, 'index']);
         Route::apiResource('products', ProductController::class);
+
         Route::post('temp-images', [TempImageController::class, 'store']);
         Route::post('save-product-image', [ProductController::class, 'saveProductImage']);
         Route::get('change-product-default-image', [ProductController::class, 'updateDefaultImage']);
         Route::delete('delete-product-image/{id}', [ProductController::class, 'deleteProductImage']);
+
+        Route::apiResource('orders', AdminOrderController::class);
     });
 });

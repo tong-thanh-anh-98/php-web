@@ -25,6 +25,7 @@ const Dashboard = () => {
                 if (result.status === 200) {
                     setStats({
                         users: result.users,
+                        orders: result.orders,
                         products: result.products
                     });
                 } else {
@@ -67,11 +68,11 @@ const Dashboard = () => {
                             <div className='col-md-4'>
                                 <div className='card shadow'>
                                     <div className='card-body'>
-                                        <h2>1</h2>
+                                        <h2>{stats.orders}</h2>
                                         <span>Orders</span>
                                     </div>
                                     <div className='card-footer'>
-                                        <a href='/admin/dashboard'>View Orders</a>
+                                        <Link to='/admin/orders'>View Orders</Link>
                                     </div>
                                 </div>
                             </div>

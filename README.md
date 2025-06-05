@@ -62,7 +62,7 @@ test API save order: http://localhost:8000/api/frontend/save-order
   "name": "AnhTT",
   "email": "att@gmail.com",
   "city": "Ho Chi Minh City",
-  "state": "Go Vap",
+  "district": "Go Vap",
   "zip": "71400",
   "address": "133 Quang Trung",
   "mobile": "0987457830",
