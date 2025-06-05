@@ -41,7 +41,6 @@ const Confirmation = () => {
         fetchOrder();
     }, [fetchOrder]);
 
-
     return (
         <Layout>
             <div className='container py-5'>
@@ -72,23 +71,23 @@ const Confirmation = () => {
                                         <p>
                                             <strong>Status: </strong>
                                             {
-                                                order.status === 'pending' && <span className='bade bg-warning'>Pending</span>
+                                                order.status === 'pending' && <span className='badge bg-warning'>Pending</span>
                                             }
                                             {
-                                                order.status === 'shipped' && <span className='bade bg-info'>Shipped</span>
+                                                order.status === 'shipped' && <span className='badge bg-info'>Shipped</span>
                                             }
                                             {
-                                                order.status === 'delivered' && <span className='bade bg-success'>delivered</span>
+                                                order.status === 'delivered' && <span className='badge bg-success'>delivered</span>
                                             }
                                             {
-                                                order.status === 'cancelled' && <span className='bade bg-danger'>Cancelled</span>
+                                                order.status === 'cancelled' && <span className='badge bg-danger'>Cancelled</span>
                                             }
                                         </p>
                                         <p><strong>Payment Method: </strong> {order.payment_status}</p>
                                     </div>
                                     <div className='col-6'>
                                         <p><strong>Customer: </strong> {order.name}</p>
-                                        <p><strong>Address: </strong> {order.address}, {order.state}, {order.city}</p>
+                                        <p><strong>Address: </strong> {order.zip}, {order.address}, {order.district}, {order.city}</p>
                                         <p><strong>Contact: </strong> {order.mobile}</p>
                                     </div>
                                 </div>

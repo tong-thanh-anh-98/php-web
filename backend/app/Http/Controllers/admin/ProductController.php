@@ -67,7 +67,7 @@ class ProductController extends Controller
                     $tempImage = TempImage::find($tempImageId);
 
                     // Large thumbnail
-                    // thay thế time() bằng Str::uuid() để đảm bảo tên file là duy nhất tuyệt đối.
+                    // replace time() with Str::uuid() to ensure filenames are absolutely unique.
                     $extArray = explode('.', $tempImage->name);
                     $ext = end($extArray);
                     $imageName = $product->id . '-' . Str::uuid() . '.' . $ext;
@@ -247,7 +247,7 @@ class ProductController extends Controller
             }
 
             $image = $request->file('image');
-            // thay thế time() bằng Str::uuid() để đảm bảo tên file là duy nhất tuyệt đối.
+            // replace time() with Str::uuid() to ensure filenames are absolutely unique.
             $imageName = $request->product_id . '-' . Str::uuid() . '.' . $image->extension();
             $imagePath = public_path('uploads/temp/' . $imageName);
             $image->move(public_path('uploads/temp/'), $imageName);
