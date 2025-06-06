@@ -143,7 +143,7 @@ const OrderDetail = () => {
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div className="d-flex">
+                                                                    <div className="d-flex flex-column">
                                                                         <div>Quantity: {item.qty}</div>
                                                                         <div className="ps-3">{item.price}</div>
                                                                     </div>

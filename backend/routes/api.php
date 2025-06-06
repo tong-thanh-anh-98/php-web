@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\ShippingController;
 use App\Http\Controllers\front\AccountController;
 use App\Http\Controllers\front\OrderController;
 use Illuminate\Support\Facades\Route;
@@ -12,6 +13,7 @@ use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\DashboardController;
 use App\Http\Controllers\admin\OrderController as AdminOrderController;
 use App\Http\Controllers\admin\TempImageController;
+use App\Http\Controllers\front\ShippingController as FrontShippingController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -34,6 +36,8 @@ Route::prefix('front')->group(function () {
         Route::post('save-order', [OrderController::class, 'saveOrder']);
         Route::get('get-order-details/{id}', [AccountController::class, 'getOrderDetails']);
         Route::get('get-orders', [AccountController::class, 'getOrders']);
+
+        Route::get('get-shipping-front', [FrontShippingController::class, 'getShipping']);
     });
 });
 
@@ -53,5 +57,8 @@ Route::prefix('admin')->group(function () {
         Route::delete('delete-product-image/{id}', [ProductController::class, 'deleteProductImage']);
 
         Route::apiResource('orders', AdminOrderController::class);
+
+        Route::get('get-shipping', [ShippingController::class, 'getShipping']);
+        Route::post('save-shipping', [ShippingController::class, 'updateShipping']);
     });
 });

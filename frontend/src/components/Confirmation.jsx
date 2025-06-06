@@ -131,7 +131,7 @@ const Confirmation = () => {
                                         </table>
                                     </div>
                                     <div className="text-center">
-                                        <button className="btn btn-primary">View Order Details</button>
+                                        <Link to={`/account/orders/details/${params.id}`} className="btn btn-primary">View Order Details</Link>
                                         <Link to={'/'} className="btn btn-outline-secondary ms-2">Continue Shopping</Link>
                                     </div>
                                 </div>
